@@ -19,7 +19,7 @@ const products = [
   },
   {
     name: "Thanh Vị",
-    degree: "30 N",
+    degree: "40 N",
     description: "Dòng chủ lực, hướng đến vị dịu hơn cho nấu ăn và làm nước chấm hằng ngày - giảm 16% độ mặn so với nền truyền thống.",
     color: "bg-emerald-100",
     textColor: "text-emerald-700",
@@ -27,7 +27,7 @@ const products = [
   },
   {
     name: "Dưỡng Vị",
-    degree: "20 N",
+    degree: "40 N",
     description: "Lựa chọn định hướng giảm mặn (24%) cho người quan tâm lượng muối trong khẩu phần ăn, vẫn giữ trọn hương vị biển cả.",
     color: "bg-cyan-100",
     textColor: "text-cyan-700",
