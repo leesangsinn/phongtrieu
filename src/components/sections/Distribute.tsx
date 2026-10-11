@@ -56,7 +56,7 @@ export default function Distribute() {
       {/* Background Image */}
       <div className="absolute inset-0 w-full h-full">
         <Image
-          src="/Câu chuyện.jpg"
+          src="/cau-chuyen.jpg"
           alt="Hàng lu mắm dưới rặng dừa xanh"
           fill
           className="object-cover"
@@ -67,15 +67,15 @@ export default function Distribute() {
       {/* Overlay */}
       <div
         className="absolute inset-0"
-        style={{ backgroundColor: "rgba(35,22,10,0.85)" }}
+        style={{ backgroundColor: "rgba(44,26,20,0.85)" }}
       />
 
       {/* Content */}
       <div className="relative z-10 container-custom text-center">
-        <span className="section-label uppercase text-amber-300 flex items-center justify-center gap-2 distribute-item">
+        <span className="section-label uppercase text-accent-soft flex items-center justify-center gap-2 distribute-item">
           Phân phối
         </span>
-        <h2 className="section-title font-lora text-white mt-3 distribute-item">
+        <h2 className="section-title font-playfair text-white mt-3 distribute-item">
           Mang hương vị truyền thống đi muôn nơi
         </h2>
         <p className="text-white/70 max-w-2xl mx-auto mb-16 font-epilogue distribute-item">
@@ -90,7 +90,7 @@ export default function Distribute() {
                 <div className="w-16 h-16 rounded-full bg-primary flex items-center justify-center mb-6">
                   <Icon size={32} className="text-white" />
                 </div>
-                <h3 className="font-lora text-xl font-bold text-white mb-3">
+                <h3 className="font-playfair text-xl font-bold text-white mb-3">
                   {channel.title}
                 </h3>
                 <p className="font-epilogue text-white/70">

@@ -1,32 +1,42 @@
 import type { Config } from "tailwindcss";
+import typography from "@tailwindcss/typography";
 
 const config: Config = {
   content: [
     "./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
+    "./src/lib/**/*.{js,ts,jsx,tsx,mdx}",
   ],
   theme: {
     extend: {
       colors: {
-        background: "#fffdf5",
-        foreground: "#2D241E",
-        primary: "#8C3A21",
-        "primary-hover": "#702E1A",
-        accent: "#D99441",
-        // Keeping some old utility colors if needed, but updating main ones
-        card: "#ffffff",
-        "text-muted": "#7d7063",
-        "deep-brown": "#3d2817",
-        cream: "#f6efe2",
+        // Design tokens (kênh RGB khai báo trong globals.css -> đổi màu 1 chỗ, giữ được opacity /xx)
+        // bg-main = background | bg-surface = surface | text-main = foreground | text-muted
+        background: "rgb(var(--rgb-bg-main) / <alpha-value>)",
+        surface: "rgb(var(--rgb-bg-surface) / <alpha-value>)",
+        foreground: "rgb(var(--rgb-text-main) / <alpha-value>)",
+        "text-muted": "rgb(var(--rgb-text-muted) / <alpha-value>)",
+        "accent-primary": "rgb(var(--rgb-accent-primary) / <alpha-value>)",
+        "accent-secondary": "rgb(var(--rgb-accent-secondary) / <alpha-value>)",
+        "accent-soft": "rgb(var(--rgb-accent-soft) / <alpha-value>)",
+        "footer-dark": "rgb(var(--rgb-footer-dark) / <alpha-value>)",
+        card: "rgb(var(--rgb-card) / <alpha-value>)",
+        // Alias cho class cũ trong code
+        primary: "rgb(var(--rgb-accent-primary) / <alpha-value>)",
+        "primary-hover": "rgb(var(--rgb-accent-secondary) / <alpha-value>)",
+        accent: "rgb(var(--rgb-accent-secondary) / <alpha-value>)",
+        "deep-brown": "rgb(var(--rgb-text-main) / <alpha-value>)",
+        cream: "rgb(var(--rgb-bg-surface) / <alpha-value>)",
+        "earth-dark": "rgb(var(--rgb-footer-dark) / <alpha-value>)",
       },
       fontFamily: {
-        lora: ["var(--font-lora)", "serif"],
+        playfair: ["var(--font-playfair)", "Georgia", "serif"],
         epilogue: ["var(--font-epilogue)", "sans-serif"],
       },
       backgroundImage: {
         "hero-gradient":
-          "linear-gradient(135deg, rgba(35,22,10,0.92) 0%, rgba(180,83,9,0.45) 100%)",
+          "linear-gradient(to right, rgba(44,26,20,0.9) 0%, rgba(140,58,33,0.5) 100%)",
       },
       keyframes: {
         "fade-up": {
@@ -53,13 +63,13 @@ const config: Config = {
         "pulse-slow": "pulse 3s ease-in-out infinite",
       },
       boxShadow: {
-        "card-hover":
-          "0 10px 40px rgba(140, 58, 33, 0.08), 0 4px 12px rgba(0,0,0,0.04)",
-        glow: "0 0 30px rgba(217, 148, 65, 0.2)",
+        brand: "0 10px 40px -10px rgba(140, 58, 33, 0.15)",
+        "card-hover": "0 10px 40px -10px rgba(140, 58, 33, 0.15)",
+        glow: "0 0 30px rgba(169, 90, 50, 0.25)",
       },
     },
   },
-  plugins: [],
+  plugins: [typography],
 };
 
 export default config;

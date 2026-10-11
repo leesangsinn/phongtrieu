@@ -4,15 +4,31 @@
 
 /* ===== CSS VARIABLES / DESIGN TOKENS ===== */
 :root {
-  /* Brand Colors */
-  --color-background: #fffdf5;
-  --color-card: #ffffff;
-  --color-foreground: #2D241E;
-  --color-text-muted: #7d7063;
-  --color-primary: #8C3A21;
-  --color-primary-hover: #702E1A;
-  --color-accent: #D99441;
-  --color-cream: #f6efe2;
+  /* ===== Design tokens: tông "nâu đỏ cánh gián" + nền kem ===== */
+  /* Kênh RGB (dùng cho Tailwind: rgb(var(--rgb-x) / <alpha>)) */
+  --rgb-bg-main: 252 249 242; /* #FCF9F2 kem sữa */
+  --rgb-bg-surface: 244 236 225; /* #F4ECE1 kem đậm */
+  --rgb-text-main: 44 26 20; /* #2C1A14 nâu đen */
+  --rgb-text-muted: 122 100 88; /* #7A6458 nâu xám */
+  --rgb-accent-primary: 140 58 33; /* #8C3A21 nâu đỏ cánh gián (màu chủ đạo cũ) */
+  --rgb-accent-secondary: 169 90 50; /* #A95A32 nâu cam (hover) */
+  --rgb-accent-soft: 233 185 138; /* #E9B98A chữ nhấn trên nền tối */
+  --rgb-footer-dark: 74 40 28; /* #4A281C */
+  --rgb-card: 255 255 255;
+
+  /* Màu dạng đầy đủ cho CSS thuần */
+  --color-background: rgb(var(--rgb-bg-main));
+  --color-surface: rgb(var(--rgb-bg-surface));
+  --color-cream: var(--color-surface);
+  --color-foreground: rgb(var(--rgb-text-main));
+  --color-deep-brown: var(--color-foreground);
+  --color-text-muted: rgb(var(--rgb-text-muted));
+  --color-primary: rgb(var(--rgb-accent-primary));
+  --color-accent-primary: var(--color-primary);
+  --color-primary-hover: rgb(var(--rgb-accent-secondary));
+  --color-accent-secondary: var(--color-primary-hover);
+  --color-accent: var(--color-accent-secondary);
+  --color-card: rgb(var(--rgb-card));
 
   /* Spacing */
   --section-padding: 5rem 0;
@@ -52,9 +68,9 @@ h3,
 h4,
 h5,
 h6 {
-  font-family: var(--font-lora), Georgia, serif;
+  font-family: var(--font-playfair), Georgia, serif;
   line-height: 1.2;
-  color: var(--color-deep-brown);
+  color: var(--color-foreground);
 }
 
 p {
@@ -94,7 +110,7 @@ img {
 
 /* ===== SELECTION ===== */
 ::selection {
-  background: rgba(180, 83, 9, 0.15);
+  background: rgba(140, 58, 33, 0.15);
   color: var(--color-deep-brown);
 }
 
@@ -127,10 +143,10 @@ img {
   }
 
   .glass-light {
-    background: rgba(253, 250, 244, 0.9);
+    background: rgba(252, 249, 242, 0.9);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
-    border: 1px solid rgba(180, 83, 9, 0.1);
+    border: 1px solid rgba(140, 58, 33, 0.1);
   }
 
   /* GSAP init state - elements start hidden */
@@ -177,7 +193,7 @@ img {
   }
 
   .section-title {
-    @apply font-lora text-3xl md:text-4xl lg:text-5xl
+    @apply font-playfair text-3xl md:text-4xl lg:text-5xl
            font-bold text-foreground leading-tight mb-6;
   }
 

@@ -38,7 +38,7 @@ export default function Contact() {
       {/* Background Image Decorative */}
       <div className="absolute -bottom-32 -right-32 w-1/2 h-[120%] opacity-[0.03] rotate-12 pointer-events-none">
         <Image
-          src="/Câu chuyện(1).jpg"
+          src="/cau-chuyen-1.jpg"
           alt="Lu mắm dưới hoàng hôn"
           fill
           className="object-cover rounded-full blur-sm"
@@ -53,7 +53,7 @@ export default function Contact() {
             <span className="section-label uppercase text-primary flex items-center gap-2">
               Liên hệ
             </span>
-            <h2 className="section-title font-lora mt-3 mb-6">
+            <h2 className="section-title font-playfair mt-3 mb-6">
               Phong Triều luôn sẵn sàng lắng nghe
             </h2>
             <p className="text-text-muted font-epilogue mb-12">
@@ -67,7 +67,7 @@ export default function Contact() {
                 </div>
                 <div>
                   <p className="font-epilogue text-sm text-text-muted">Hotline</p>
-                  <p className="font-lora text-lg font-bold text-foreground">0979 425 607</p>
+                  <p className="font-playfair text-lg font-bold text-foreground">0979 425 607</p>
                 </div>
               </div>
               <div className="flex items-center gap-4">
@@ -76,7 +76,7 @@ export default function Contact() {
                 </div>
                 <div>
                   <p className="font-epilogue text-sm text-text-muted">Email</p>
-                  <p className="font-lora text-lg font-bold text-foreground">mamdisanphongtrieu@gmail.com</p>
+                  <p className="font-playfair text-lg font-bold text-foreground">mamdisanphongtrieu@gmail.com</p>
                 </div>
               </div>
               <div className="flex items-center gap-4">
@@ -85,7 +85,7 @@ export default function Contact() {
                 </div>
                 <div>
                   <p className="font-epilogue text-sm text-text-muted">Văn phòng</p>
-                  <p className="font-lora text-lg font-bold text-foreground">cập nhật</p>
+                  <p className="font-playfair text-lg font-bold text-foreground">cập nhật</p>
                 </div>
               </div>
             </div>
@@ -93,7 +93,7 @@ export default function Contact() {
 
           {/* Cột phải: Form */}
           <div className="contact-animate">
-            <form className="bg-card p-8 md:p-10 rounded-3xl shadow-sm border border-primary/10 flex flex-col gap-6">
+            <form className="bg-card p-8 md:p-10 rounded-3xl shadow-sm border border-primary/10 flex flex-col gap-6 transition-shadow duration-300 hover:shadow-brand">
               <div>
                 <label htmlFor="name" className="block font-epilogue text-sm font-semibold text-foreground mb-2">Họ và tên</label>
                 <input

@@ -2,44 +2,111 @@
 
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import Image from "next/image";
 import { Menu, X, ShoppingBag } from "lucide-react";
+import gsap from "gsap";
 import { cn } from "@/lib/utils";
-
-const navLinks = [
-  { href: "#home", label: "Trang chủ" },
-  { href: "#story", label: "Câu chuyện" },
-  { href: "#products", label: "Sản phẩm" },
-  { href: "#news", label: "Tin tức" },
-  { href: "#distribute", label: "Phân phối" },
-  { href: "#contact", label: "Liên hệ" },
-];
+import { navLinks, isActivePath } from "@/lib/nav";
 
 export default function Navbar() {
-  const [isScrolled, setIsScrolled] = useState(false);
+  const pathname = usePathname();
+  const [scrolled, setScrolled] = useState(false);
   const [isMobileOpen, setIsMobileOpen] = useState(false);
-  const [activeSection, setActiveSection] = useState("home");
+  // Chỉ trang chủ có hero tối full-screen -> navbar trong suốt; các trang khác luôn dùng nền sáng
+  const isScrolled = scrolled || pathname !== "/";
   const mobileMenuRef = useRef<HTMLDivElement>(null);
+
+  // ----- Linh vật chạy theo tab đang active (desktop) -----
+  const tabsRef = useRef<HTMLDivElement>(null);
+  const tabRefs = useRef<(HTMLAnchorElement | null)[]>([]);
+  const mascotRef = useRef<HTMLDivElement>(null); // lớp ngoài: trục x
+  const hopRef = useRef<HTMLDivElement>(null); // lớp giữa: nảy y khi di chuyển
+  const mascotImgRef = useRef<HTMLImageElement>(null); // lớp trong: lật mặt + idle
+  const mascotX = useRef<number | null>(null);
+  const activeIndex = navLinks.findIndex((l) => isActivePath(pathname, l.href));
+
+  useEffect(() => {
+    const mascot = mascotRef.current;
+    const hop = hopRef.current;
+    const img = mascotImgRef.current;
+    const tab = tabRefs.current[activeIndex];
+    if (!mascot || !hop || !img) return;
+
+    // Trang không thuộc menu (404...) -> ẩn linh vật
+    if (!tab) {
+      gsap.set(mascot, { autoAlpha: 0 });
+      mascotX.current = null;
+      return;
+    }
+
+    const targetX = () => tab.offsetLeft + tab.offsetWidth / 2 - mascot.offsetWidth / 2;
+
+    const ctx = gsap.context(() => {
+      const startIdle = () =>
+        gsap.to(img, { y: -3, duration: 1.5, ease: "sine.inOut", yoyo: true, repeat: -1 });
+
+      if (mascotX.current === null) {
+        // Lần đầu: đặt thẳng vào tab, không animate
+        gsap.set(mascot, { x: targetX(), autoAlpha: 1 });
+        mascotX.current = targetX();
+        startIdle();
+        return;
+      }
+
+      const from = mascotX.current;
+      const to = targetX();
+      gsap.set(mascot, { autoAlpha: 1 });
+      if (to === from) {
+        startIdle();
+        return;
+      }
+
+      // Đi sang trái -> lật mặt, sang phải -> giữ nguyên
+      gsap.set(img, { scaleX: to < from ? -1 : 1 });
+
+      const dist = Math.abs(to - from);
+      const duration = Math.min(1.1, 0.5 + dist / 1200);
+      gsap
+        .timeline({
+          onComplete: () => {
+            mascotX.current = to;
+            startIdle();
+          },
+        })
+        .to(mascot, { x: to, duration, ease: "power2.inOut" }, 0)
+        // Nảy lên rồi đáp xuống (cung parabol)
+        .to(hop, { y: -6, duration: duration / 2, ease: "power2.out" }, 0)
+        .to(hop, { y: 0, duration: duration / 2, ease: "power2.in" }, duration / 2);
+    }, tabsRef);
+
+    // Giữ linh vật đúng tab khi đổi kích thước cửa sổ
+    const onResize = () => {
+      gsap.set(mascot, { x: targetX() });
+      mascotX.current = targetX();
+    };
+    window.addEventListener("resize", onResize);
+    return () => {
+      window.removeEventListener("resize", onResize);
+      ctx.revert();
+      gsap.killTweensOf([mascot, hop, img]);
+      gsap.set(img, { y: 0 });
+      gsap.set(hop, { y: 0 });
+    };
+  }, [activeIndex]);
 
   // Detect scroll to switch navbar style
   useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 60);
-
-      // Active section tracking
-      const sections = ["home", "story", "products", "news", "distribute", "contact"];
-      const current = sections.find((id) => {
-        const el = document.getElementById(id);
-        if (!el) return false;
-        const rect = el.getBoundingClientRect();
-        return rect.top <= 100 && rect.bottom >= 100;
-      });
-      if (current) setActiveSection(current);
-    };
-
+    const handleScroll = () => setScrolled(window.scrollY > 60);
+    handleScroll();
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+
+  // Đóng menu mobile khi chuyển trang
+  useEffect(() => {
+    setIsMobileOpen(false);
+  }, [pathname]);
 
   // Close mobile menu on outside click
   useEffect(() => {
@@ -55,15 +122,6 @@ export default function Navbar() {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  const handleNavClick = (href: string) => {
-    setIsMobileOpen(false);
-    const id = href.replace("#", "");
-    const el = document.getElementById(id);
-    if (el) {
-      el.scrollIntoView({ behavior: "smooth", block: "start" });
-    }
-  };
-
   return (
     <header
       className={cn(
@@ -74,11 +132,10 @@ export default function Navbar() {
       )}
     >
       <nav className="container-custom">
-        <div className="flex items-center justify-between h-16 md:h-20">
+        <div className="flex items-center justify-between h-16 md:h-20 lg:h-[88px]">
           {/* ===== LOGO ===== */}
           <Link
-            href="#home"
-            onClick={() => handleNavClick("#home")}
+            href="/"
             className="flex items-center gap-2.5 group"
           >
             <div className="w-10 h-10 rounded-full overflow-hidden border border-white/20 bg-card">
@@ -87,7 +144,7 @@ export default function Navbar() {
             <div className="leading-tight">
               <span
                 className={cn(
-                  "block font-lora font-bold text-lg transition-colors duration-300",
+                  "block font-playfair font-bold text-lg transition-colors duration-300",
                   isScrolled ? "text-foreground" : "text-white"
                 )}
               >
@@ -105,14 +162,34 @@ export default function Navbar() {
           </Link>
 
           {/* ===== DESKTOP NAV LINKS ===== */}
-          <div className="hidden lg:flex items-center gap-1">
-            {navLinks.map((link) => {
-              const sectionId = link.href.replace("#", "");
-              const isActive = activeSection === sectionId;
+          <div ref={tabsRef} className="relative hidden lg:flex items-center gap-1">
+            {/* Linh vật bé cá chạy theo tab active (chỉ hiện từ lg trở lên) */}
+            <div
+              ref={mascotRef}
+              className="invisible absolute left-0 -top-[26px] z-10 w-7 pointer-events-none"
+              aria-hidden
+            >
+              <div ref={hopRef}>
+                <Image
+                  ref={mascotImgRef}
+                  alt="Mascot"
+                  src="/linh-vat-cutout.png"
+                  width={776}
+                  height={898}
+                  sizes="28px"
+                  className="w-7 h-auto drop-shadow-md"
+                />
+              </div>
+            </div>
+            {navLinks.map((link, i) => {
+              const isActive = isActivePath(pathname, link.href);
               return (
-                <button
+                <Link
                   key={link.href}
-                  onClick={() => handleNavClick(link.href)}
+                  href={link.href}
+                  ref={(el) => {
+                    tabRefs.current[i] = el;
+                  }}
                   className={cn(
                     "relative px-4 py-2 font-epilogue text-sm font-medium rounded-full transition-all duration-300",
                     isScrolled
@@ -128,15 +205,15 @@ export default function Navbar() {
                   {isActive && (
                     <span className="absolute bottom-1 left-1/2 -translate-x-1/2 w-1 h-1 bg-primary rounded-full" />
                   )}
-                </button>
+                </Link>
               );
             })}
           </div>
 
           {/* ===== CTA BUTTON + MOBILE TOGGLE ===== */}
           <div className="flex items-center gap-3">
-            <button
-              onClick={() => handleNavClick("#contact")}
+            <Link
+              href="/lien-he"
               className={cn(
                 "hidden sm:inline-flex items-center gap-2 px-5 py-2.5 rounded-full",
                 "font-epilogue font-semibold text-sm tracking-wide",
@@ -148,7 +225,7 @@ export default function Navbar() {
             >
               <ShoppingBag size={15} />
               <span>Đặt hàng</span>
-            </button>
+            </Link>
 
             {/* Mobile Menu Toggle */}
             <button
@@ -176,14 +253,13 @@ export default function Navbar() {
         >
           <div className="glass-light rounded-2xl mx-0 my-2 p-4 border border-primary/10">
             {navLinks.map((link) => {
-              const sectionId = link.href.replace("#", "");
-              const isActive = activeSection === sectionId;
+              const isActive = isActivePath(pathname, link.href);
               return (
-                <button
+                <Link
                   key={link.href}
-                  onClick={() => handleNavClick(link.href)}
+                  href={link.href}
                   className={cn(
-                    "w-full text-left px-4 py-3 rounded-xl font-epilogue text-sm font-medium",
+                    "block w-full text-left px-4 py-3 rounded-xl font-epilogue text-sm font-medium",
                     "transition-all duration-200 mb-1",
                     isActive
                       ? "bg-primary/10 text-primary"
@@ -191,17 +267,14 @@ export default function Navbar() {
                   )}
                 >
                   {link.label}
-                </button>
+                </Link>
               );
             })}
             <div className="pt-3 border-t border-primary/10 mt-2">
-              <button
-                onClick={() => handleNavClick("#contact")}
-                className="w-full btn-primary justify-center"
-              >
+              <Link href="/lien-he" className="w-full btn-primary justify-center">
                 <ShoppingBag size={16} />
                 Đặt hàng ngay
-              </button>
+              </Link>
             </div>
           </div>
         </div>

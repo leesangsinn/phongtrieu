@@ -42,7 +42,7 @@ export default function Story() {
             <span className="section-label uppercase text-primary flex items-center gap-2">
               Câu chuyện thương hiệu
             </span>
-            <h2 className="section-title font-lora mt-3">
+            <h2 className="section-title font-playfair mt-3">
               Từ nhịp gió và con nước, lưu giữ hương vị quê nhà
             </h2>
             <div className="text-text-muted font-epilogue space-y-4">
@@ -62,7 +62,7 @@ export default function Story() {
           <div className="story-content h-full">
             <div className="relative h-[400px] lg:h-[500px] w-full rounded-2xl overflow-hidden shadow-sm">
               <Image
-                src="/Câu chuyện.jpg"
+                src="/cau-chuyen.jpg"
                 alt="Thợ khuấy lu mắm dưới ánh mặt trời"
                 fill
                 className="object-cover h-full"

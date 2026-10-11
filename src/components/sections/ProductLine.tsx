@@ -13,25 +13,25 @@ const products = [
     name: "Di Sản",
     degree: "40 N",
     description: "Hương vị đậm đà theo phong cách truyền thống, dành cho người yêu thích nước mắm nguyên bản và làm quà tặng đặc sản.",
-    color: "bg-amber-100",
-    textColor: "text-amber-700",
-    image: "/Phong Triều Di Sản.jpg",
+    color: "bg-primary/10",
+    textColor: "text-primary",
+    image: "/disan.png",
   },
   {
     name: "Thanh Vị",
     degree: "40 N",
     description: "Dòng chủ lực, hướng đến vị dịu hơn cho nấu ăn và làm nước chấm hằng ngày - giảm 16% độ mặn so với nền truyền thống.",
-    color: "bg-emerald-100",
-    textColor: "text-emerald-700",
-    image: "/Phong triều thanh vị.jpg",
+    color: "bg-accent/15",
+    textColor: "text-accent",
+    image: "/thanhvi.png",
   },
   {
     name: "Dưỡng Vị",
     degree: "40 N",
     description: "Lựa chọn định hướng giảm mặn (24%) cho người quan tâm lượng muối trong khẩu phần ăn, vẫn giữ trọn hương vị biển cả.",
-    color: "bg-cyan-100",
-    textColor: "text-cyan-700",
-    image: "/Phong Triều Dưỡng Vị.jpg",
+    color: "bg-surface",
+    textColor: "text-foreground",
+    image: "/duongvi.png",
   },
 ];
 
@@ -56,6 +56,22 @@ export default function ProductLine() {
         }
       );
       
+      gsap.fromTo(
+        ".product-mascot",
+        { y: 100, rotation: 15, opacity: 0 },
+        {
+          y: 0,
+          rotation: 0,
+          opacity: 1,
+          duration: 1,
+          ease: "power3.out",
+          scrollTrigger: {
+            trigger: ".product-grid",
+            start: "top 60%",
+          },
+        }
+      );
+
       gsap.fromTo(
         ".qr-banner",
         { opacity: 0, scale: 0.95 },
@@ -83,27 +99,37 @@ export default function ProductLine() {
           <span className="section-label uppercase text-primary flex items-center justify-center gap-2">
             Sản phẩm
           </span>
-          <h2 className="section-title font-lora mt-3">
+          <h2 className="section-title font-playfair mt-3">
             Ba dòng hương vị, một di sản nghề mắm
           </h2>
         </div>
 
         {/* Product Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
+        <div className="product-grid relative grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
+          {/* Linh vật lấp ló sau các thẻ sản phẩm */}
+          <div className="product-mascot pointer-events-none absolute -bottom-14 -right-2 z-0 hidden w-36 opacity-0 md:block lg:-right-6 lg:w-44">
+            <Image
+              src="/linh-vat-cutout.png"
+              alt="Linh vật cá Phong Triều"
+              width={776}
+              height={898}
+              sizes="176px"
+            />
+          </div>
           {products.map((product) => (
             <div
               key={product.name}
-              className="product-card bg-card border border-white/10 rounded-2xl p-8 transition-all duration-300 hover:-translate-y-2 hover:shadow-card-hover flex flex-col items-center text-center"
+              className="product-card relative z-10 bg-card border border-white/10 rounded-2xl p-8 transition-all duration-300 hover:-translate-y-2 hover:shadow-brand flex flex-col items-center text-center"
             >
               <div className="relative w-full aspect-[4/5] mb-6 rounded-xl overflow-hidden bg-cream">
                 <Image src={product.image} alt={product.name} fill className="object-cover transition-transform duration-500 hover:scale-105" />
                 <div className={`absolute top-4 right-4 w-12 h-12 rounded-full ${product.color} flex items-center justify-center shadow-sm`}>
-                  <span className={`font-lora font-bold text-sm ${product.textColor}`}>
+                  <span className={`font-playfair font-bold text-sm ${product.textColor}`}>
                     {product.degree}
                   </span>
                 </div>
               </div>
-              <h3 className="font-lora text-2xl font-bold text-foreground mb-4">
+              <h3 className="font-playfair text-2xl font-bold text-foreground mb-4">
                 {product.name}
               </h3>
               <p className="font-epilogue text-text-muted">
@@ -116,7 +142,7 @@ export default function ProductLine() {
         {/* QR Code Banner */}
         <div className="qr-banner bg-cream rounded-3xl p-8 md:p-12 border border-primary/10 flex flex-col md:flex-row items-center justify-between gap-8 shadow-sm">
           <div className="flex-1 text-center md:text-left">
-            <h4 className="font-lora text-2xl font-bold text-foreground mb-3">
+            <h4 className="font-playfair text-2xl font-bold text-foreground mb-3">
               Từ truyền thống đến trải nghiệm hiện đại
             </h4>
             <p className="font-epilogue text-text-muted">

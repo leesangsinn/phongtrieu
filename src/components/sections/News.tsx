@@ -14,7 +14,7 @@ const articles = [
     category: "Di sản nghề mắm",
     title: "Phong Triều – Gió đưa vị biển, quyện về vị quê",
     description: "Câu chuyện của người làm nghề và đời sống vùng biển, nơi nghề truyền thống được tiếp nối qua từng thế hệ.",
-    image: "/Di sản nghề mắm.jpg",
+    image: "/di-san-nghe-mam.jpg",
     date: "15/10/2026",
   },
   {
@@ -22,7 +22,7 @@ const articles = [
     category: "Di sản nghề mắm",
     title: "Từ cá và muối đến giọt nước mắm truyền thống",
     description: "Hành trình bền bỉ của người thợ ủ chượp từ những mẻ cá đầu tiên đến từng giọt nước mắm tinh túy.",
-    image: "/Câu chuyện.jpg",
+    image: "/cau-chuyen.jpg",
     date: "10/10/2026",
   },
   {
@@ -30,7 +30,7 @@ const articles = [
     category: "Kiến thức nước mắm",
     title: "Độ đạm và độ mặn: Người tiêu dùng nên hiểu thế nào?",
     description: "Tìm hiểu ý nghĩa của độ đạm, độ mặn và cách đọc thông tin trên nhãn chai nước mắm để chọn đúng sản phẩm.",
-    image: "/Đổi mới có chọn lọc.jpg",
+    image: "/doi-moi-co-chon-loc.jpg",
     date: "05/10/2026",
   },
   {
@@ -38,7 +38,7 @@ const articles = [
     category: "Bếp Việt",
     title: "Bữa cơm Việt và những hương vị thân quen",
     description: "Gợi ý những món ngon đậm đà bản sắc từ nguyên liệu sẵn có, kết hợp cùng nước mắm Phong Triều.",
-    image: "/Phong Triều Di Sản.jpg",
+    image: "/disan.png",
     date: "01/10/2026",
   },
 ];
@@ -75,7 +75,7 @@ export default function News() {
           <span className="section-label uppercase text-primary flex items-center justify-center gap-2">
             Góc Phong Triều
           </span>
-          <h2 className="section-title font-lora mt-3">
+          <h2 className="section-title font-playfair mt-3">
             Chia sẻ cảm hứng & tri thức
           </h2>
           <p className="text-text-muted font-epilogue mt-4">
@@ -106,7 +106,7 @@ export default function News() {
                 <span className="font-epilogue text-xs text-text-muted mb-3">
                   {articles[0].date}
                 </span>
-                <h3 className="font-lora text-2xl font-bold text-foreground mb-4 group-hover:text-primary transition-colors">
+                <h3 className="font-playfair text-2xl font-bold text-foreground mb-4 group-hover:text-primary transition-colors">
                   {articles[0].title}
                 </h3>
                 <p className="font-epilogue text-text-muted mb-6 flex-1">
@@ -135,7 +135,7 @@ export default function News() {
                   <span className="font-epilogue text-[10px] font-bold text-primary uppercase tracking-wider mb-2">
                     {article.category}
                   </span>
-                  <h3 className="font-lora text-lg font-bold text-foreground mb-2 group-hover:text-primary transition-colors line-clamp-2 leading-snug">
+                  <h3 className="font-playfair text-lg font-bold text-foreground mb-2 group-hover:text-primary transition-colors line-clamp-2 leading-snug">
                     {article.title}
                   </h3>
                   <span className="font-epilogue text-xs text-text-muted mt-auto">

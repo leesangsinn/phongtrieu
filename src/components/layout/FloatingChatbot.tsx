@@ -1,7 +1,8 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { MessageCircle, X, Send, Bot, Sparkles } from "lucide-react";
+import Image from "next/image";
+import { X, Send, Bot, Sparkles } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface Message {
@@ -16,10 +17,7 @@ const INITIAL_MESSAGES: Message[] = [
     id: "1",
     role: "bot",
     text: "Xin chào! Tôi là trợ lý AI của Phong Triều 🐟 Tôi có thể giúp bạn tìm hiểu về sản phẩm, đặt hàng hoặc tư vấn loại nước mắm phù hợp!",
-    time: new Date().toLocaleTimeString("vi-VN", {
-      hour: "2-digit",
-      minute: "2-digit",
-    }),
+    time: "", // gán sau khi mount để không lệch giữa server và client
   },
 ];
 
@@ -28,18 +26,17 @@ export default function FloatingChatbot() {
   const [messages, setMessages] = useState<Message[]>(INITIAL_MESSAGES);
   const [input, setInput] = useState("");
   const [isTyping, setIsTyping] = useState(false);
-  const [showPulse, setShowPulse] = useState(true);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const now = new Date().toLocaleTimeString("vi-VN", { hour: "2-digit", minute: "2-digit" });
+    setMessages((prev) => prev.map((m) => (m.time ? m : { ...m, time: now })));
+  }, []);
 
   // Auto-scroll to bottom on new message
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
-
-  // Stop pulse after first open
-  useEffect(() => {
-    if (isOpen) setShowPulse(false);
-  }, [isOpen]);
 
   const handleSend = async () => {
     if (!input.trim()) return;
@@ -61,11 +58,11 @@ export default function FloatingChatbot() {
     // Simulate AI response (placeholder for real API integration)
     setTimeout(() => {
       const botReplies: Record<string, string> = {
-        mắm: "Phong Triều có 3 dòng sản phẩm: Di Sản (40°N), Thanh Vị (30°N) và Dưỡng Vị (20°N). Bạn muốn tìm hiểu dòng nào?",
-        giá: "Giá sản phẩm dao động từ 85.000đ đến 350.000đ/chai tùy dòng. Liên hệ 0905 123 456 để đặt số lượng lớn!",
-        "đặt hàng": "Bạn có thể đặt hàng qua form liên hệ, gọi 0905 123 456, hoặc nhắn tin Zalo để được hỗ trợ nhanh nhất!",
+        mắm: "Phong Triều có 3 dòng sản phẩm: Di Sản, Thanh Vị và Dưỡng Vị. Bạn muốn tìm hiểu dòng nào?",
+        giá: "Bạn vui lòng liên hệ hotline 0979 425 607 để được báo giá và tư vấn đặt số lượng lớn nhé!",
+        "đặt hàng": "Bạn có thể gửi lời nhắn qua trang Liên hệ hoặc gọi hotline 0979 425 607 để được hỗ trợ đặt hàng.",
         default:
-          "Cảm ơn bạn đã quan tâm! Vui lòng để lại thông tin qua form Liên hệ hoặc gọi hotline 0905 123 456 để được tư vấn chi tiết.",
+          "Cảm ơn bạn đã quan tâm! Vui lòng để lại thông tin qua trang Liên hệ hoặc gọi hotline 0979 425 607 để được tư vấn chi tiết.",
       };
 
       const lower = userMsg.text.toLowerCase();
@@ -104,16 +101,22 @@ export default function FloatingChatbot() {
         <div className="bg-card rounded-3xl shadow-sm overflow-hidden border border-primary/10">
           {/* Chat Header */}
           <div className="bg-gradient-to-r from-deep-brown to-primary p-4 flex items-center gap-3">
-            <div className="w-10 h-10 rounded-full bg-card/20 flex items-center justify-center">
-              <Bot size={20} className="text-white" />
+            <div className="relative w-10 h-10 rounded-full bg-cream overflow-hidden shrink-0">
+              <Image
+                src="/linh-vat-cutout.png"
+                alt="Bé Cá Phong Triều"
+                fill
+                sizes="40px"
+                className="object-contain p-0.5"
+              />
             </div>
             <div className="flex-1">
               <p className="font-epilogue font-semibold text-white text-sm">
-                Trợ lý Phong Triều
+                Bé Cá Phong Triều
               </p>
               <div className="flex items-center gap-1.5">
-                <span className="w-2 h-2 bg-accent-secondary rounded-full animate-pulse" />
-                <span className="text-white/70 text-xs">Đang trực tuyến</span>
+                <span className="w-2 h-2 bg-accent rounded-full animate-pulse" />
+                <span className="text-white/70 text-xs">đang gõ...</span>
               </div>
             </div>
             <button
@@ -155,11 +158,11 @@ export default function FloatingChatbot() {
                       : "bg-primary text-white rounded-tr-sm"
                   )}
                 >
-                  <p>{msg.text}</p>
+                  <p className={msg.role === "bot" ? "text-foreground" : "text-white"}>{msg.text}</p>
                   <p
                     className={cn(
                       "text-[10px] mt-1",
-                      msg.role === "bot" ? "text-text-muted" : "text-white/60"
+                      msg.role === "bot" ? "text-text-muted" : "text-white/75"
                     )}
                   >
                     {msg.time}
@@ -229,39 +232,35 @@ export default function FloatingChatbot() {
         aria-label="Mở chatbot hỗ trợ"
         className={cn(
           "fixed bottom-6 right-4 sm:right-6 z-50",
-          "w-14 h-14 rounded-full shadow-sm",
-          "flex items-center justify-center",
-          "transition-all duration-300",
-          "bg-gradient-to-br from-primary to-deep-brown",
-          "hover:scale-110 hover:shadow-glow",
-          "active:scale-95",
-          isOpen ? "rotate-0" : "rotate-0"
+          "w-14 h-14 rounded-full",
+          "transition-transform duration-300",
+          "hover:scale-110 active:scale-95"
         )}
       >
-        {/* Pulse ring */}
-        {showPulse && (
-          <>
-            <span className="absolute inset-0 rounded-full bg-primary animate-ping opacity-30" />
-            <span className="absolute inset-[-4px] rounded-full border-2 border-primary/30 animate-pulse" />
-          </>
-        )}
-
-        {/* Icon toggle */}
-        <div className="relative w-6 h-6">
-          <MessageCircle
-            size={22}
+        {/* Linh vật (đóng) / nút đóng (mở) */}
+        <div className={cn("relative w-full h-full", !isOpen && "animate-bounce")}>
+          <div
             className={cn(
-              "absolute inset-0 text-white transition-all duration-300",
-              isOpen ? "opacity-0 scale-75 rotate-90" : "opacity-100 scale-100 rotate-0"
+              "absolute inset-0 rounded-full overflow-hidden bg-cream border-2 border-white shadow-md transition-all duration-300",
+              isOpen ? "opacity-0 scale-75" : "opacity-100 scale-100"
             )}
-          />
-          <X
-            size={22}
+          >
+            <Image
+              src="/linh-vat-cutout.png"
+              alt=""
+              fill
+              sizes="56px"
+              className="rounded-full object-contain p-1"
+            />
+          </div>
+          <div
             className={cn(
-              "absolute inset-0 text-white transition-all duration-300",
+              "absolute inset-0 rounded-full bg-gradient-to-br from-primary to-deep-brown shadow-md flex items-center justify-center transition-all duration-300",
               isOpen ? "opacity-100 scale-100 rotate-0" : "opacity-0 scale-75 rotate-90"
             )}
-          />
+          >
+            <X size={22} className="text-white" />
+          </div>
         </div>
       </button>
     </>

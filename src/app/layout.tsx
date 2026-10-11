@@ -1,14 +1,15 @@
 import type { Metadata } from "next";
-import { Lora, Epilogue } from "next/font/google";
+import { Playfair_Display, Epilogue } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import FloatingChatbot from "@/components/layout/FloatingChatbot";
+import FloatingMascot from "@/components/layout/FloatingMascot";
 
 // ===== FONT CONFIGURATION =====
-const lora = Lora({
+const playfair = Playfair_Display({
   subsets: ["latin", "vietnamese"],
-  variable: "--font-lora",
+  variable: "--font-playfair",
   display: "swap",
   weight: ["400", "500", "600", "700"],
   style: ["normal", "italic"],
@@ -22,16 +23,25 @@ const epilogue = Epilogue({
 });
 
 // ===== SEO METADATA =====
+// Đặt NEXT_PUBLIC_SITE_URL (vd. https://tenmiencuaban.vn) khi có tên miền chính thức
+const siteUrl =
+  process.env.NEXT_PUBLIC_SITE_URL ??
+  (process.env.VERCEL_PROJECT_PRODUCTION_URL
+    ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
+    : "http://localhost:3000");
+
 export const metadata: Metadata = {
+  metadataBase: new URL(siteUrl),
   title: {
-    default: "Phong Triều — Nước mắm truyền thống Huế",
+    default: "Phong Triều — Nước mắm truyền thống Nghệ An",
     template: "%s | Phong Triều",
   },
   description:
-    "Phong Triều — Nước mắm truyền thống từ biển Huế. Hương vị thuần khiết, giữ gìn di sản cha ông qua từng giọt mắm. Đặt hàng ngay hôm nay!",
+    "Phong Triều — Nước mắm truyền thống từ biển Nghệ An. Hương vị thuần khiết, giữ gìn di sản cha ông qua từng giọt mắm. Đặt hàng ngay hôm nay!",
   keywords: [
     "nước mắm",
-    "nước mắm Huế",
+    "nước mắm Nghệ An",
+    "nước mắm cốt Nghệ An",
     "nước mắm truyền thống",
     "Phong Triều",
     "mắm nhĩ",
@@ -42,16 +52,15 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     locale: "vi_VN",
-    url: "https://phongtrieufish.vn",
     siteName: "Phong Triều",
-    title: "Phong Triều — Nước mắm truyền thống Huế",
+    title: "Phong Triều — Nước mắm truyền thống Nghệ An",
     description:
       "Hương vị thuần khiết từ biển cả — Giữ gìn di sản nghề mắm truyền thống",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Phong Triều — Nước mắm truyền thống Huế",
-    description: "Hương vị thuần khiết từ biển cả Huế",
+    title: "Phong Triều — Nước mắm truyền thống Nghệ An",
+    description: "Hương vị thuần khiết từ biển cả Nghệ An",
   },
   robots: {
     index: true,
@@ -72,7 +81,7 @@ export default function RootLayout({
   return (
     <html
       lang="vi"
-      className={`${lora.variable} ${epilogue.variable}`}
+      className={`${playfair.variable} ${epilogue.variable}`}
     >
       <body className="font-epilogue antialiased bg-background text-foreground">
         {/* Global Navigation */}
@@ -86,6 +95,9 @@ export default function RootLayout({
 
         {/* Floating AI Chatbot FAB */}
         <FloatingChatbot />
+
+        {/* Cursor-tracking mascot */}
+        <FloatingMascot />
       </body>
     </html>
   );
