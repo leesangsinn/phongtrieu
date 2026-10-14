@@ -58,10 +58,12 @@ export default function ContactBlock() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          name: formData.get("name"),
-          contact: formData.get("contact"),
+          fullName: formData.get("fullName"),
+          phone: formData.get("phone"),
+          email: formData.get("email"),
           topic,
           message: formData.get("message"),
+          website: formData.get("website"),
         }),
       });
       const data = await res.json();
@@ -151,17 +153,49 @@ export default function ContactBlock() {
           <div data-reveal="0.15" className="rounded-3xl bg-white p-8 shadow-sm transition-shadow duration-300 hover:shadow-brand md:p-10">
             <h2 className="font-playfair text-2xl text-foreground md:text-3xl">Lời nhắn của bạn</h2>
             <p className="mb-7 mt-3 text-sm">
-              Điền thông tin bên dưới, chúng tôi sẽ tiếp nhận yêu cầu qua hệ thống liên hệ của thương hiệu khi
-              website được kết nối.
+              Điền thông tin bên dưới, đội ngũ Phong Triều sẽ nhận được lời nhắn của bạn ngay lập tức và
+              liên hệ lại sớm nhất.
             </p>
             <form onSubmit={onSubmit} className="grid gap-5">
               <div>
                 <label htmlFor="ct-name" className={label}>Họ và tên</label>
-                <input id="ct-name" name="name" required className={field} placeholder="Nguyễn Văn A" autoComplete="name" />
+                <input id="ct-name" name="fullName" required maxLength={100} className={field} placeholder="Nguyễn Văn A" autoComplete="name" />
               </div>
-              <div>
-                <label htmlFor="ct-contact" className={label}>Số điện thoại hoặc email</label>
-                <input id="ct-contact" name="contact" required className={field} placeholder="09xx xxx xxx hoặc email@example.com" />
+              <div className="grid gap-5 sm:grid-cols-2">
+                <div>
+                  <label htmlFor="ct-phone" className={label}>Số điện thoại</label>
+                  <input
+                    id="ct-phone"
+                    name="phone"
+                    type="tel"
+                    required
+                    maxLength={20}
+                    pattern="[0-9+\s\(\)\.\-]{8,20}"
+                    title="Nhập số điện thoại hợp lệ"
+                    className={field}
+                    placeholder="09xx xxx xxx"
+                    autoComplete="tel"
+                  />
+                </div>
+                <div>
+                  <label htmlFor="ct-email" className={label}>
+                    Email <span className="font-normal text-text-muted">(không bắt buộc)</span>
+                  </label>
+                  <input
+                    id="ct-email"
+                    name="email"
+                    type="email"
+                    maxLength={254}
+                    className={field}
+                    placeholder="email@example.com"
+                    autoComplete="email"
+                  />
+                </div>
+              </div>
+              {/* Ô bẫy chống bot: người dùng không thấy, bot tự động thường điền vào */}
+              <div className="absolute -left-[9999px] h-0 w-0 overflow-hidden" aria-hidden="true">
+                <label htmlFor="ct-website">Website</label>
+                <input id="ct-website" name="website" tabIndex={-1} autoComplete="off" />
               </div>
               <div>
                 <label htmlFor="ct-topic" className={label}>Bạn muốn trao đổi về</label>
@@ -182,7 +216,7 @@ export default function ContactBlock() {
               </div>
               <div>
                 <label htmlFor="ct-message" className={label}>Nội dung lời nhắn</label>
-                <textarea id="ct-message" name="message" required rows={5} className={field} placeholder="Bạn muốn Phong Triều lắng nghe điều gì?" />
+                <textarea id="ct-message" name="message" required rows={5} maxLength={2000} className={field} placeholder="Bạn muốn Phong Triều lắng nghe điều gì?" />
               </div>
               <button
                 type="submit"

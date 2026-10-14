@@ -50,7 +50,7 @@ export default function AdminDashboardPage() {
 
         const contactsCount =
           contactsRes.status === "fulfilled" && contactsRes.value?.success
-            ? (contactsRes.value.data || []).length
+            ? contactsRes.value.pagination?.total ?? (contactsRes.value.data || []).length
             : 0;
 
         const partnersCount =
