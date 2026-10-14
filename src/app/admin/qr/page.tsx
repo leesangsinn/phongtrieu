@@ -152,21 +152,21 @@ export default function AdminQRPage() {
       const response = await fetch(url);
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.message || "Không thể xuất file Excel.");
+        throw new Error(errorData.message || "Không thể tải file ZIP.");
       }
 
       const blob = await response.blob();
       const downloadUrl = window.URL.createObjectURL(blob);
       const link = document.createElement("a");
       link.href = downloadUrl;
-      link.download = `PhongTrieu_${bCode}_QRCodes.xlsx`;
+      link.download = `QRCodes_${bCode}.zip`;
       document.body.appendChild(link);
       link.click();
       link.remove();
       window.URL.revokeObjectURL(downloadUrl);
     } catch (error: unknown) {
       const err = error as Error;
-      alert(`Lỗi khi xuất file Excel: ${err.message}`);
+      alert(`Lỗi khi tải file ZIP: ${err.message}`);
     } finally {
       setExportingId(null);
     }
@@ -584,7 +584,7 @@ export default function AdminQRPage() {
                           onClick={() => handleExportExcel(b._id, b.batchCode)}
                           disabled={isExportingThis}
                           className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-emerald-50 hover:bg-emerald-100 border border-emerald-300 text-emerald-800 text-xs font-semibold transition active:scale-95 disabled:opacity-50"
-                          title="Tải file Excel danh sách mã QR để in tem"
+                          title="Tải gói ZIP gồm ảnh QR PNG và file Excel danh sách để gửi xưởng in"
                         >
                           {isExportingThis ? (
                             <>
@@ -594,7 +594,7 @@ export default function AdminQRPage() {
                           ) : (
                             <>
                               <FileSpreadsheet size={14} className="text-emerald-700" />
-                              <span>Xuất Excel</span>
+                              <span>Tải File ZIP (Ảnh QR + Excel)</span>
                             </>
                           )}
                         </button>

@@ -3,6 +3,8 @@ import { connectDB } from "@/lib/db";
 import { Batch } from "@/models/Batch"; // Ensure Batch model is registered for populate
 import { QRCode } from "@/models/QRCode";
 
+export const dynamic = "force-dynamic";
+
 interface RouteParams {
   params: {
     codeId: string;

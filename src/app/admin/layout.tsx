@@ -53,26 +53,11 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
 
   const isLoginPage = pathname === "/admin/login";
 
-  // Check auth state
+  // Việc xác thực do middleware (src/middleware.ts) bảo đảm ở phía máy chủ: không có phiên hợp lệ
+  // thì request không bao giờ tới được layout này, nên ở đây chỉ cần bỏ trạng thái "đang kiểm tra".
   useEffect(() => {
-    if (isLoginPage) {
-      setIsAuthenticated(true);
-      return;
-    }
-
-    // Check token from cookie or localStorage
-    const hasLocalToken =
-      typeof window !== "undefined" && localStorage.getItem("pt_admin_token");
-    const hasCookieToken =
-      typeof document !== "undefined" && document.cookie.includes("pt_admin_token=");
-
-    if (!hasLocalToken && !hasCookieToken) {
-      setIsAuthenticated(false);
-      router.replace("/admin/login");
-    } else {
-      setIsAuthenticated(true);
-    }
-  }, [pathname, isLoginPage, router]);
+    setIsAuthenticated(true);
+  }, []);
 
   // Handle Logout
   const handleLogout = async () => {
@@ -80,10 +65,6 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
       await fetch("/api/admin/logout", { method: "POST" });
     } catch {
       // ignore
-    }
-    if (typeof window !== "undefined") {
-      localStorage.removeItem("pt_admin_token");
-      document.cookie = "pt_admin_token=; path=/; max-age=0";
     }
     router.replace("/admin/login");
   };

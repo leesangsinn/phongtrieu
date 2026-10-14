@@ -3,9 +3,19 @@ import { v4 as uuidv4 } from "uuid";
 import { connectDB } from "@/lib/db";
 import { Batch, ProductLine, Volume } from "@/models/Batch";
 import { QRCode } from "@/models/QRCode";
+import { requireAdmin } from "@/lib/require-admin";
+import { getAppUrl } from "@/lib/app-url";
+
+export const dynamic = "force-dynamic";
 
 export async function POST(req: NextRequest) {
+  const denied = await requireAdmin(req);
+  if (denied) return denied;
+
   try {
+    // Bắt buộc có tên miền chính thức trước khi sinh mã (link này được in lên tem)
+    const appUrl = getAppUrl();
+
     await connectDB();
 
     const body = await req.json();
@@ -15,7 +25,6 @@ export async function POST(req: NextRequest) {
       volume,
       bottlingDate,
       quantity,
-      websiteUrl,
       contactPhone,
     } = body;
 
@@ -92,7 +101,7 @@ export async function POST(req: NextRequest) {
       productLine,
       volume,
       bottlingDate: new Date(bottlingDate),
-      websiteUrl: websiteUrl?.trim() || "https://phongtrieu.com",
+      websiteUrl: appUrl,
       contactPhone: contactPhone?.trim() || "0979425607",
     });
 

@@ -43,11 +43,7 @@ export default function AdminLoginPage() {
         throw new Error(data.message || "Tài khoản hoặc mật khẩu không chính xác.");
       }
 
-      // Store mock token in localStorage and cookie
-      if (typeof window !== "undefined") {
-        localStorage.setItem("pt_admin_token", data.token);
-        document.cookie = `pt_admin_token=${data.token}; path=/; max-age=604800; SameSite=Lax`;
-      }
+      // Phiên đăng nhập nằm trong cookie httpOnly do máy chủ cấp, không lưu gì ở trình duyệt
 
       // Redirect to Admin QR management
       router.push("/admin/qr");

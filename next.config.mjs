@@ -1,5 +1,9 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  experimental: {
+    // archiver (xuất ZIP mã QR) có package.json "exports" mà webpack của Next 14 không bundle được -> chạy như module Node ngoài
+    serverComponentsExternalPackages: ["archiver"],
+  },
   async redirects() {
     return [
       { source: "/phan-phoi", destination: "/dai-ly", permanent: true },
