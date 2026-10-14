@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useParams } from "next/navigation";
@@ -20,6 +20,8 @@ import {
 interface VerificationData {
   codeId: string;
   scanCount: number;
+  maxScans?: number;
+  remainingScans?: number;
   isFirstScan: boolean;
   firstScannedAt?: string;
   lastScannedAt?: string;
@@ -40,20 +42,30 @@ export default function VerificationPage() {
   const [loading, setLoading] = useState<boolean>(true);
   const [data, setData] = useState<VerificationData | null>(null);
   const [error, setError] = useState<string | null>(null);
+  // "limit": mã đã hết lượt quét; "invalid": mã không tồn tại / lỗi khác
+  const [errorKind, setErrorKind] = useState<"limit" | "invalid">("invalid");
+
+  // Mỗi lần xác thực là một lượt quét tính vào giới hạn: chỉ gọi API đúng MỘT lần cho mỗi mã
+  // (React StrictMode ở chế độ dev chạy effect hai lần sẽ làm tiêu hao 2 lượt).
+  const requestedFor = useRef<string | null>(null);
 
   useEffect(() => {
     if (!codeId) return;
+    if (requestedFor.current === codeId) return;
+    requestedFor.current = codeId;
 
     async function verifyProduct() {
       try {
         setLoading(true);
         setError(null);
+        setErrorKind("invalid");
         const res = await fetch(`/api/verify/${encodeURIComponent(codeId)}`, {
           cache: "no-store",
         });
         const result = await res.json();
 
         if (!res.ok || !result.success) {
+          if (result.code === "SCAN_LIMIT_EXCEEDED") setErrorKind("limit");
           throw new Error(
             result.message || "Mã định danh không hợp lệ hoặc không tìm thấy trên hệ thống Phong Triều."
           );
@@ -154,17 +166,22 @@ export default function VerificationPage() {
             </div>
             <div className="text-center space-y-2">
               <span className="px-3 py-1 rounded-full bg-rose-100 text-rose-800 text-xs font-bold uppercase tracking-wider">
-                Cảnh Báo Tem Không Hợp Lệ
+                {errorKind === "limit" ? "Mã QR Đã Hết Lượt Quét" : "Cảnh Báo Tem Không Hợp Lệ"}
               </span>
               <h1 className="font-playfair text-2xl font-bold text-rose-950">
-                Không tìm thấy thông tin sản phẩm
+                {errorKind === "limit"
+                  ? "Không thể xác thực thêm"
+                  : "Không tìm thấy thông tin sản phẩm"}
               </h1>
               <p className="text-sm text-[#7A6458] max-w-md mx-auto">
                 {error}
               </p>
             </div>
             <div className="bg-rose-50/70 rounded-2xl p-4 text-xs text-rose-900 border border-rose-100 leading-relaxed">
-              <strong>Khuyến cáo an toàn:</strong> Quý khách vui lòng kiểm tra lại tem dán trên nắp chai hoặc liên hệ trực tiếp hotline của Phong Triều để được hỗ trợ xác minh, tránh sử dụng sản phẩm giả mạo nguồn gốc.
+              <strong>Khuyến cáo an toàn:</strong>{" "}
+              {errorKind === "limit"
+                ? "Mỗi tem chỉ xác thực được số lần giới hạn. Nếu bạn chưa từng quét tem này, rất có thể mã đã bị sao chép từ sản phẩm khác. Hãy giữ lại sản phẩm và liên hệ hotline của Phong Triều để được xác minh."
+                : "Quý khách vui lòng kiểm tra lại tem dán trên nắp chai hoặc liên hệ trực tiếp hotline của Phong Triều để được hỗ trợ xác minh, tránh sử dụng sản phẩm giả mạo nguồn gốc."}
             </div>
             <div className="pt-2 text-center">
               <a
@@ -209,7 +226,13 @@ export default function VerificationPage() {
                   <p className="text-sm font-medium leading-relaxed">
                     {data.isFirstScan
                       ? "Chúc mừng! Đây là lần đầu tiên mã tem này được quét xác thực. Sản phẩm nguyên bản xuất xưởng từ Phong Triều."
-                      : `Lưu ý: Mã tem này đã được quét ${data.scanCount} lần trên hệ thống. Lần quét đầu tiên: ${
+                      : `Lưu ý: Mã tem này đã được quét ${data.scanCount}${
+                          data.maxScans ? `/${data.maxScans}` : ""
+                        } lần trên hệ thống${
+                          data.remainingScans === 0
+                            ? ". Đây là lần quét cuối cùng, các lần sau mã sẽ bị từ chối"
+                            : ""
+                        }. Lần quét đầu tiên: ${
                           data.firstScannedAt
                             ? new Date(data.firstScannedAt).toLocaleDateString("vi-VN", {
                                 hour: "2-digit",

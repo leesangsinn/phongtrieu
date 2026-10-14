@@ -20,6 +20,11 @@ interface RouteParams {
   };
 }
 
+/** Chỉ giữ ký tự an toàn cho tên file/sheet (mã lô do người dùng nhập, tránh "/" hoặc ".." trong ZIP). */
+function safeName(value: string): string {
+  return String(value).replace(/[^A-Za-z0-9._-]+/g, "_").replace(/^\.+/, "_") || "LO";
+}
+
 interface ExportRow {
   stt: number;
   codeId: string;
@@ -37,15 +42,13 @@ async function buildExcel(
   workbook.creator = "Nước Mắm Truyền Thống Phong Triều";
   workbook.created = new Date();
 
-  const ws = workbook.addWorksheet(`Lô ${batchCode}`);
+  const ws = workbook.addWorksheet(`Lô ${safeName(batchCode)}`.slice(0, 31));
   ws.columns = [
     { header: "STT", key: "stt", width: 8 },
     { header: "Mã Lô", key: "batchCode", width: 22 },
     { header: "Dòng Sản Phẩm", key: "productLine", width: 22 },
     { header: "Dung Tích", key: "volume", width: 14 },
-    { header: "Mã UUID", key: "codeId", width: 42 },
     { header: "Tên File Ảnh QR", key: "fileName", width: 36 },
-    { header: "Link Xác Minh", key: "verifyUrl", width: 65 },
   ];
 
   const headerRow = ws.getRow(1);
@@ -56,8 +59,10 @@ async function buildExcel(
     cell.alignment = { vertical: "middle", horizontal: "center" };
   });
 
+  // File Excel gửi nhà in chỉ có thông tin cần để in và xếp tem. Mã UUID và link xác minh
+  // KHÔNG đưa vào đây (mã nằm sẵn trong ảnh QR; hệ thống tự phát hiện mã bị quét quá giới hạn).
   for (const r of rows) {
-    ws.addRow({ ...r, batchCode, productLine, volume });
+    ws.addRow({ stt: r.stt, batchCode, productLine, volume, fileName: r.fileName });
   }
 
   return Buffer.from(await workbook.xlsx.writeBuffer());
@@ -113,7 +118,7 @@ export async function GET(req: NextRequest, { params }: RouteParams) {
     const rows = qrCodes.map((qr, index) => ({
       stt: index + 1,
       codeId: qr.codeId as string,
-      fileName: `${batch.batchCode}_${String(index + 1).padStart(pad, "0")}_${String(qr.codeId).substring(0, 6)}.png`,
+      fileName: `${safeName(batch.batchCode)}_${String(index + 1).padStart(pad, "0")}.png`,
       verifyUrl: `${cleanBaseUrl}/xac-thuc/${qr.codeId}`,
     }));
 
@@ -144,7 +149,7 @@ export async function GET(req: NextRequest, { params }: RouteParams) {
           await done;
           if (output.destroyed) return; // client aborted
         }
-        archive.append(excelBuffer, { name: `DanhSach_${batch.batchCode}.xlsx` });
+        archive.append(excelBuffer, { name: `DanhSach_${safeName(batch.batchCode)}.xlsx` });
         await archive.finalize();
       } catch (e) {
         console.error("Lỗi khi tạo file ZIP:", e);
@@ -153,7 +158,7 @@ export async function GET(req: NextRequest, { params }: RouteParams) {
       }
     })();
 
-    const safeFilename = `QRCodes_${batch.batchCode}.zip`;
+    const safeFilename = `QRCodes_${safeName(batch.batchCode)}.zip`;
 
     return new NextResponse(Readable.toWeb(output) as unknown as ReadableStream, {
       status: 200,
