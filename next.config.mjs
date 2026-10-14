@@ -1,8 +1,10 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   async redirects() {
-    // Tab "Phân phối" đã đổi thành "Đại lý"
-    return [{ source: "/phan-phoi", destination: "/dai-ly", permanent: true }];
+    return [
+      { source: "/phan-phoi", destination: "/dai-ly", permanent: true },
+      { source: "/verify/:codeId", destination: "/xac-thuc/:codeId", permanent: false },
+    ];
   },
   images: {
     remotePatterns: [

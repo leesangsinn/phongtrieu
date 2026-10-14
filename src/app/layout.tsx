@@ -1,10 +1,7 @@
 import type { Metadata } from "next";
 import { Playfair_Display, Epilogue } from "next/font/google";
 import "./globals.css";
-import Navbar from "@/components/layout/Navbar";
-import Footer from "@/components/layout/Footer";
-import FloatingChatbot from "@/components/layout/FloatingChatbot";
-import FloatingMascot from "@/components/layout/FloatingMascot";
+import AppChrome from "@/components/layout/AppChrome";
 
 // ===== FONT CONFIGURATION =====
 const playfair = Playfair_Display({
@@ -84,20 +81,7 @@ export default function RootLayout({
       className={`${playfair.variable} ${epilogue.variable}`}
     >
       <body className="font-epilogue antialiased bg-background text-foreground">
-        {/* Global Navigation */}
-        <Navbar />
-
-        {/* Page Content */}
-        <main className="min-h-screen">{children}</main>
-
-        {/* Global Footer */}
-        <Footer />
-
-        {/* Floating AI Chatbot FAB */}
-        <FloatingChatbot />
-
-        {/* Cursor-tracking mascot */}
-        <FloatingMascot />
+        <AppChrome>{children}</AppChrome>
       </body>
     </html>
   );

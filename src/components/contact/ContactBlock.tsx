@@ -35,17 +35,47 @@ const label = "mb-1.5 block text-sm font-medium text-foreground";
 
 export default function ContactBlock() {
   const [topic, setTopic] = useState(topics[0].id);
-  const [checked, setChecked] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
+  const [errorMsg, setErrorMsg] = useState("");
 
   const pick = (id: string) => {
     setTopic(id);
-    setChecked(false);
+    setSubmitted(false);
+    setErrorMsg("");
     document.getElementById("loi-nhan")?.scrollIntoView({ behavior: "smooth", block: "start" });
   };
 
-  const onSubmit = (e: FormEvent) => {
+  const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setChecked(true);
+    setSubmitting(true);
+    setErrorMsg("");
+    const form = e.currentTarget;
+    const formData = new FormData(form);
+
+    try {
+      const res = await fetch("/api/leads/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: formData.get("name"),
+          contact: formData.get("contact"),
+          topic,
+          message: formData.get("message"),
+        }),
+      });
+      const data = await res.json();
+      if (!res.ok || !data.success) {
+        throw new Error(data.message || "Không thể gửi lời nhắn.");
+      }
+      setSubmitted(true);
+      form.reset();
+    } catch (err: unknown) {
+      const error = err as Error;
+      setErrorMsg(error.message || "Đã xảy ra lỗi khi gửi lời nhắn.");
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
@@ -141,7 +171,7 @@ export default function ContactBlock() {
                   value={topic}
                   onChange={(e) => {
                     setTopic(e.target.value);
-                    setChecked(false);
+                    setSubmitted(false);
                   }}
                   className={field}
                 >
@@ -156,20 +186,23 @@ export default function ContactBlock() {
               </div>
               <button
                 type="submit"
-                className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-accent-primary py-3 font-bold text-white transition-all hover:bg-accent-secondary"
+                disabled={submitting}
+                className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-accent-primary py-3 font-bold text-white transition-all hover:bg-accent-secondary disabled:opacity-60"
               >
                 <ShieldCheck size={17} />
-                Kiểm tra thông tin
+                {submitting ? "Đang gửi lời nhắn..." : "Gửi lời nhắn ngay"}
               </button>
-              {checked && (
-                <p className="flex items-start gap-2 rounded-xl bg-surface px-4 py-3 text-sm text-foreground" role="status">
-                  <CheckCircle2 size={18} className="mt-0.5 shrink-0 text-primary" />
-                  Thông tin hợp lệ. Biểu mẫu này là bản minh họa giao diện, chưa gửi thông tin đến doanh nghiệp.
+              {submitted && (
+                <p className="flex items-start gap-2 rounded-xl bg-emerald-50 border border-emerald-200 px-4 py-3 text-sm text-emerald-800" role="status">
+                  <CheckCircle2 size={18} className="mt-0.5 shrink-0 text-emerald-600" />
+                  Cảm ơn bạn! Lời nhắn đã được gửi thành công đến Phong Triều. Chúng tôi sẽ phản hồi sớm nhất.
                 </p>
               )}
-              <p className="text-center text-xs">
-                Biểu mẫu này là bản minh họa giao diện, chưa gửi thông tin đến doanh nghiệp.
-              </p>
+              {errorMsg && (
+                <p className="flex items-start gap-2 rounded-xl bg-rose-50 border border-rose-200 px-4 py-3 text-sm text-rose-800" role="alert">
+                  {errorMsg}
+                </p>
+              )}
             </form>
           </div>
         </div>

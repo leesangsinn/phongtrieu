@@ -3,7 +3,6 @@
 import { useState, type FormEvent } from "react";
 import { Send } from "lucide-react";
 
-const EMAIL = "mamdisanphongtrieu@gmail.com";
 const types = ["Cửa hàng thực phẩm", "Đại lý bán lẻ", "Nhà phân phối", "Nhà hàng HORECA", "Khác"];
 
 const field =
@@ -11,23 +10,43 @@ const field =
 const label = "mb-1.5 block text-sm font-medium text-foreground";
 
 export default function PartnerForm() {
+  const [submitting, setSubmitting] = useState(false);
   const [sent, setSent] = useState(false);
+  const [errorMsg, setErrorMsg] = useState("");
 
-  // Chưa có backend: mở ứng dụng email của người dùng với nội dung điền sẵn
-  const onSubmit = (e: FormEvent<HTMLFormElement>) => {
+  const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const d = new FormData(e.currentTarget);
-    const body = [
-      `Họ và tên: ${d.get("name")}`,
-      `Số điện thoại: ${d.get("phone")}`,
-      `Hình thức hợp tác: ${d.get("type")}`,
-      `Tỉnh / Thành phố kinh doanh: ${d.get("city")}`,
-      `Ghi chú: ${d.get("note") || "(không có)"}`,
-    ].join("\n");
-    window.location.href = `mailto:${EMAIL}?subject=${encodeURIComponent(
-      "Đăng ký hợp tác phân phối Phong Triều"
-    )}&body=${encodeURIComponent(body)}`;
-    setSent(true);
+    setSubmitting(true);
+    setErrorMsg("");
+    const form = e.currentTarget;
+    const d = new FormData(form);
+
+    try {
+      const res = await fetch("/api/leads/partner", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: d.get("name"),
+          phone: d.get("phone"),
+          type: d.get("type"),
+          city: d.get("city"),
+          note: d.get("note") || "",
+        }),
+      });
+
+      const data = await res.json();
+      if (!res.ok || !data.success) {
+        throw new Error(data.message || "Không thể gửi đăng ký đối tác.");
+      }
+
+      setSent(true);
+      form.reset();
+    } catch (err: unknown) {
+      const error = err as Error;
+      setErrorMsg(error.message || "Đã xảy ra lỗi khi gửi đăng ký.");
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
@@ -86,15 +105,20 @@ export default function PartnerForm() {
 
       <button
         type="submit"
-        className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-accent-primary py-3 font-bold text-white transition-all hover:bg-accent-secondary"
+        disabled={submitting}
+        className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-accent-primary py-3 font-bold text-white transition-all hover:bg-accent-secondary disabled:opacity-60"
       >
         <Send size={16} />
-        Đăng ký hợp tác ngay
+        {submitting ? "Đang gửi đăng ký..." : "Đăng ký hợp tác ngay"}
       </button>
       {sent && (
-        <p className="text-center text-sm" role="status">
-          Ứng dụng email đã được mở với thông tin của bạn. Hãy bấm gửi để hoàn tất, hoặc liên hệ trực tiếp
-          qua {EMAIL}.
+        <p className="rounded-xl bg-emerald-50 border border-emerald-200 px-4 py-3 text-center text-sm text-emerald-800" role="status">
+          Cảm ơn bạn! Đăng ký hợp tác của bạn đã được ghi nhận vào hệ thống Phong Triều. Chúng tôi sẽ sớm liên hệ qua số điện thoại đã cung cấp!
+        </p>
+      )}
+      {errorMsg && (
+        <p className="rounded-xl bg-rose-50 border border-rose-200 px-4 py-3 text-center text-sm text-rose-800" role="alert">
+          {errorMsg}
         </p>
       )}
     </form>
