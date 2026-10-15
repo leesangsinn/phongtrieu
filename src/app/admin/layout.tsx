@@ -6,6 +6,7 @@ import { usePathname, useRouter } from "next/navigation";
 import {
   LayoutDashboard,
   QrCode,
+  Globe,
   MessageSquare,
   Handshake,
   LogOut,
@@ -31,6 +32,11 @@ const navItems = [
     name: "Quản lý Mã QR",
     href: "/admin/qr",
     icon: QrCode,
+  },
+  {
+    name: "Mã QR Trang Web",
+    href: "/admin/landing-qr",
+    icon: Globe,
   },
   {
     name: "Khách hàng Liên hệ",

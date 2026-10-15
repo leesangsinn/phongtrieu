@@ -17,9 +17,10 @@ export async function middleware(req: NextRequest) {
   const isAdminPage = pathname === "/admin" || pathname.startsWith("/admin/");
   const isLoginPage = pathname === "/admin/login";
   const isBatchApi = pathname === "/api/batches" || pathname.startsWith("/api/batches/");
+  const isLandingQrApi = pathname === "/api/landing-qr";
   const isLeadsPrivate = pathname.startsWith("/api/leads/") && req.method !== "POST";
 
-  const needsAuth = (isAdminPage && !isLoginPage) || isBatchApi || isLeadsPrivate;
+  const needsAuth = (isAdminPage && !isLoginPage) || isBatchApi || isLandingQrApi || isLeadsPrivate;
   if (!needsAuth) return NextResponse.next();
 
   const token = req.cookies.get(SESSION_COOKIE)?.value;
@@ -43,5 +44,5 @@ export async function middleware(req: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/admin/:path*", "/api/batches/:path*", "/api/leads/:path*"],
+  matcher: ["/admin/:path*", "/api/batches/:path*", "/api/landing-qr", "/api/leads/:path*"],
 };
