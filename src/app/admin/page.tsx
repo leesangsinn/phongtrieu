@@ -23,6 +23,7 @@ export default function AdminDashboardPage() {
     totalQR: 0,
     scannedQR: 0,
     totalContacts: 0,
+    pendingContacts: 0,
     totalPartners: 0,
   });
   const [loading, setLoading] = useState(true);
@@ -53,6 +54,12 @@ export default function AdminDashboardPage() {
             ? contactsRes.value.pagination?.total ?? (contactsRes.value.data || []).length
             : 0;
 
+        // Khách đã gửi liên hệ nhưng chưa được Sale liên hệ lại
+        const pendingContacts =
+          contactsRes.status === "fulfilled" && contactsRes.value?.success
+            ? contactsRes.value.counts?.new ?? 0
+            : 0;
+
         const partnersCount =
           partnersRes.status === "fulfilled" && partnersRes.value?.success
             ? (partnersRes.value.data || []).length
@@ -63,6 +70,7 @@ export default function AdminDashboardPage() {
           totalQR: qrCount,
           scannedQR: scannedCount,
           totalContacts: contactsCount,
+          pendingContacts,
           totalPartners: partnersCount,
         });
       } catch (err) {
@@ -181,6 +189,15 @@ export default function AdminDashboardPage() {
             <p className="text-xs text-[#7A6458] mt-1 font-medium">
               {stats.totalPartners} đại lý &bull; {stats.totalContacts} liên hệ
             </p>
+            {!loading && stats.pendingContacts > 0 && (
+              <Link
+                href="/admin/contacts"
+                className="mt-2 inline-flex items-center gap-1.5 rounded-full border border-rose-200 bg-rose-50 px-2.5 py-1 text-[11px] font-semibold text-rose-700 hover:bg-rose-100"
+              >
+                <span className="h-1.5 w-1.5 rounded-full bg-rose-500" aria-hidden />
+                {stats.pendingContacts} khách chưa liên hệ
+              </Link>
+            )}
           </div>
         </div>
       </div>

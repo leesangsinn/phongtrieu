@@ -47,7 +47,7 @@ export async function GET(req: NextRequest, { params }: RouteParams) {
         },
       ],
       // Mongoose 9 yêu cầu bật updatePipeline khi cập nhật bằng aggregation pipeline
-      { new: true, updatePipeline: true }
+      { returnDocument: "after", updatePipeline: true }
     ).populate({
       path: "batchId",
       model: Batch,

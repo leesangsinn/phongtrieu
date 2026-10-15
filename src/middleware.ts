@@ -5,7 +5,8 @@ import { SESSION_COOKIE, verifySessionToken } from "@/lib/auth";
  * Bảo vệ khu vực quản trị và các API nhạy cảm:
  *  - Trang /admin/*            (trừ /admin/login)  -> chưa đăng nhập: chuyển tới /admin/login
  *  - /api/batches/*            (mọi phương thức, gồm export)  -> 401
- *  - GET /api/leads/*          (danh sách khách hàng)  -> 401
+ *  - /api/leads/*              (xem danh sách, đổi trạng thái, ghi chú...)  -> 401
+ *    NGOẠI TRỪ POST (khách gửi form liên hệ / đăng ký đại lý)
  *
  * Công khai: POST /api/leads/* (form liên hệ, đăng ký đại lý), /api/verify/*, /api/admin/login.
  * Mỗi route handler nhạy cảm còn tự kiểm tra lại bằng requireAdmin() (phòng thủ nhiều lớp).
@@ -16,9 +17,9 @@ export async function middleware(req: NextRequest) {
   const isAdminPage = pathname === "/admin" || pathname.startsWith("/admin/");
   const isLoginPage = pathname === "/admin/login";
   const isBatchApi = pathname === "/api/batches" || pathname.startsWith("/api/batches/");
-  const isLeadsRead = pathname.startsWith("/api/leads/") && req.method === "GET";
+  const isLeadsPrivate = pathname.startsWith("/api/leads/") && req.method !== "POST";
 
-  const needsAuth = (isAdminPage && !isLoginPage) || isBatchApi || isLeadsRead;
+  const needsAuth = (isAdminPage && !isLoginPage) || isBatchApi || isLeadsPrivate;
   if (!needsAuth) return NextResponse.next();
 
   const token = req.cookies.get(SESSION_COOKIE)?.value;

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { connectDB } from "@/lib/db";
-import { Contact } from "@/models/Contact";
+import type { QueryFilter } from "mongoose";
+import { Contact, type ContactStatus, type IContact } from "@/models/Contact";
 import { requireAdmin } from "@/lib/require-admin";
 import { sendContactNotification } from "@/lib/mailer";
 import { clientIp, rateLimit } from "@/lib/rate-limit";
@@ -16,6 +17,7 @@ const MAX_PAGE_SIZE = 50;
 const MAX_SEARCH_LENGTH = 100;
 
 const NO_STORE = { "Cache-Control": "no-store" };
+const STATUSES = ["new", "contacted", "resolved"] as const;
 
 /** Chuỗi một dòng: bỏ ký tự điều khiển (chặn chèn header email), gộp khoảng trắng. */
 function singleLine(value: unknown): string {
@@ -160,7 +162,7 @@ export async function GET(req: NextRequest) {
 
     // Tìm kiếm tùy chọn (thoát ký tự regex để người dùng không chèn được biểu thức)
     const q = singleLine(params.get("q") ?? "").slice(0, MAX_SEARCH_LENGTH);
-    const filter = q
+    const searchFilter = q
       ? {
           $or: ["name", "phone", "email", "contact", "topic"].map((field) => ({
             [field]: { $regex: escapeRegex(q), $options: "i" },
@@ -168,22 +170,43 @@ export async function GET(req: NextRequest) {
         }
       : {};
 
+    // Lọc theo trạng thái xử lý (new = chưa liên hệ); giá trị lạ bị bỏ qua
+    const statusParam = params.get("status") ?? "";
+    const status = (STATUSES as readonly string[]).includes(statusParam) ? (statusParam as ContactStatus) : null;
+    // "new" cũng gồm bản ghi rất cũ chưa có trường status (khớp với cách đếm bên dưới)
+    const filter: QueryFilter<IContact> = status
+      ? { ...searchFilter, status: status === "new" ? { $in: ["new", null] } : status }
+      : searchFilter;
+
     await connectDB();
 
-    const [contacts, total] = await Promise.all([
+    const [contacts, total, grouped] = await Promise.all([
       Contact.find(filter)
         .sort({ createdAt: -1, _id: -1 }) // _id làm khóa phụ để thứ tự ổn định khi trùng thời gian
         .skip(skip)
         .limit(limit)
-        .select("name phone email contact topic message status emailSent createdAt")
+        .select("name phone email contact topic message status emailSent note contactedAt statusUpdatedAt createdAt")
         .lean(),
       Contact.countDocuments(filter),
+      // Số lượng theo từng trạng thái (có áp dụng ô tìm kiếm, không áp dụng bộ lọc trạng thái)
+      Contact.aggregate<{ _id: string; n: number }>([
+        { $match: searchFilter },
+        { $group: { _id: "$status", n: { $sum: 1 } } },
+      ]),
     ]);
+
+    const counts = { all: 0, new: 0, contacted: 0, resolved: 0 };
+    for (const g of grouped) {
+      const key = (STATUSES as readonly string[]).includes(g._id) ? (g._id as (typeof STATUSES)[number]) : "new";
+      counts[key] += g.n;
+      counts.all += g.n;
+    }
 
     return NextResponse.json(
       {
         success: true,
         data: contacts,
+        counts,
         pagination: {
           total,
           totalPages: Math.ceil(total / limit),

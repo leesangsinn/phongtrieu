@@ -14,6 +14,12 @@ export interface IContact extends Document {
   status: ContactStatus;
   /** true khi email thông báo cho team Sale đã gửi thành công. */
   emailSent: boolean;
+  /** Ghi chú nội bộ của Sale (không hiển thị cho khách). */
+  note?: string;
+  /** Lần đầu tiên được đánh dấu "Đã liên hệ" (hoặc "Đã xử lý"). */
+  contactedAt?: Date;
+  /** Lần gần nhất đổi trạng thái. */
+  statusUpdatedAt?: Date;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -64,6 +70,17 @@ const ContactSchema: Schema<IContact> = new Schema(
       type: Boolean,
       default: false,
     },
+    note: {
+      type: String,
+      trim: true,
+      maxlength: 1000,
+    },
+    contactedAt: {
+      type: Date,
+    },
+    statusUpdatedAt: {
+      type: Date,
+    },
   },
   {
     timestamps: true,
@@ -72,6 +89,8 @@ const ContactSchema: Schema<IContact> = new Schema(
 
 // Phục vụ sắp xếp "mới nhất trước" khi phân trang
 ContactSchema.index({ createdAt: -1 });
+// Phục vụ lọc theo trạng thái + đếm theo trạng thái
+ContactSchema.index({ status: 1, createdAt: -1 });
 
 export const Contact: Model<IContact> =
   mongoose.models.Contact || mongoose.model<IContact>("Contact", ContactSchema);
