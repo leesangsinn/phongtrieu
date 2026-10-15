@@ -22,7 +22,7 @@ interface Message {
 const QUICK_QUESTIONS = [
   "Nên chọn Di Sản, Thanh Vị hay Dưỡng Vị?",
   "Kiểm tra hàng thật bằng QR thế nào?",
-  "Cho mình báo giá mua số lượng lớn",
+  "Giá nước mắm Phong Triều bao nhiêu?",
 ];
 
 const INITIAL_MESSAGES: Message[] = [
@@ -40,6 +40,9 @@ export default function FloatingChatbot() {
   const [input, setInput] = useState("");
   const [isTyping, setIsTyping] = useState(false);
   const [leadOpen, setLeadOpen] = useState(false);
+  // Đã gửi thông tin hoặc đã đóng form thì bot không tự bật lại nữa (khách vẫn mở tay được)
+  const [leadSent, setLeadSent] = useState(false);
+  const [leadDismissed, setLeadDismissed] = useState(false);
   const [suggestions, setSuggestions] = useState<string[]>([]);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
@@ -102,7 +105,7 @@ export default function FloatingChatbot() {
 
     setIsTyping(false);
     setMessages((prev) => [...prev, botMsg]);
-    if (askLead) setLeadOpen(true);
+    if (askLead && !leadSent && !leadDismissed) setLeadOpen(true);
   };
 
   const handleSend = () => send(input);
@@ -117,6 +120,7 @@ export default function FloatingChatbot() {
 
   const finishLead = (text: string) => {
     setLeadOpen(false);
+    setLeadSent(true);
     setMessages((prev) => [...prev, { id: `b-${Date.now()}`, role: "bot", text, time: nowTime() }]);
   };
 
@@ -263,7 +267,10 @@ export default function FloatingChatbot() {
                 </div>
               </div>
             )}
-            {leadOpen && <ChatLeadForm defaultNote={leadNote} onDone={finishLead} onCancel={() => setLeadOpen(false)} />}
+            {leadOpen && <ChatLeadForm defaultNote={leadNote} onDone={finishLead} onCancel={() => {
+                setLeadOpen(false);
+                setLeadDismissed(true);
+              }} />}
             <div ref={messagesEndRef} />
           </div>
 

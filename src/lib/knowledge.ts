@@ -23,13 +23,26 @@ export interface SearchHit {
 
 const MAX_CHUNK_CHARS = 1600;
 
+// Giá trong bài viết có thể lệch với bảng giá chính thức (knowledge-company.ts) nên không đưa vào chatbot;
+// chatbot chỉ báo giá từ bảng giá chính thức để khách không nhận hai con số khác nhau.
+const PRICE_RE = /\d{1,3}(?:\.\d{3})+\s*(?:VNĐ|VND|đồng|đ|₫)/i;
+const PRICE_IN_HEADING_RE = /\s*(?:-\s*)?(?:dòng sản phẩm\s*)?giá\s*\d{1,3}(?:\.\d{3})+\s*(?:VNĐ|VND|đồng|đ|₫)\s*$/i;
+
+function withoutPrices(text: string): string {
+  return text
+    .split("\n")
+    .filter((line) => !PRICE_RE.test(line))
+    .join("\n")
+    .trim();
+}
+
 /** Thông tin chung luôn được đưa vào ngữ cảnh. Chỉ ghi những gì đã được xác nhận trên website. */
 export const COMPANY_FACTS = [
   "Phong Triều là thương hiệu nước mắm truyền thống gắn với vùng biển Nghệ An.",
   "Ba dòng sản phẩm: Di Sản, Thanh Vị, Dưỡng Vị. Xem thông tin tại trang Sản phẩm (/san-pham).",
   "Hotline: 0979 425 607. Email: mamdisanphongtrieu@gmail.com.",
   "Gửi lời nhắn cho đội ngũ tại trang Liên hệ (/lien-he). Tìm điểm bán hoặc đăng ký làm đại lý tại trang Đại lý (/dai-ly).",
-  "Địa chỉ doanh nghiệp: đang cập nhật.",
+  "Website: https://phongtrieu.vercel.app. Khu vực sản xuất: Quỳnh Phú, Nghệ An. Địa chỉ văn phòng/cửa hàng: đang cập nhật.",
 ].join("\n");
 
 // ───────────────── Chuẩn hóa & tách từ ─────────────────
@@ -117,11 +130,11 @@ export function buildChunks(): KnowledgeChunk[] {
     }
 
     sections.forEach((sec, i) => {
-      const text = sec.blocks.map(blockToText).join("\n").trim();
+      const text = withoutPrices(sec.blocks.map(blockToText).join("\n"));
       if (!text) return;
       chunks.push(
         ...splitLong(
-          `${post.title} — ${sec.heading}`,
+          `${post.title} — ${sec.heading.replace(PRICE_IN_HEADING_RE, "")}`,
           text,
           { slug: post.slug, articleTitle: post.title },
           `${post.slug}:${i}`
