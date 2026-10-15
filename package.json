@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
+    "news": "python scripts/build-news.py",
     "start": "next start",
     "lint": "next lint"
   },

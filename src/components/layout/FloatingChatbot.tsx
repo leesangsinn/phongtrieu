@@ -2,21 +2,34 @@
 
 import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
-import { X, Send, Bot, Sparkles } from "lucide-react";
+import Link from "next/link";
+import { X, Send, Bot, Sparkles, Phone } from "lucide-react";
 import { cn } from "@/lib/utils";
+import ChatLeadForm from "@/components/layout/ChatLeadForm";
 
 interface Message {
   id: string;
   role: "bot" | "user";
   text: string;
   time: string;
+  /** Bài viết dùng làm nguồn cho câu trả lời (chỉ có ở tin nhắn của bot) */
+  sources?: { title: string; slug: string }[];
+  /** Bot không chắc hoặc khách cần người thật: hiện nút gọi hotline */
+  handoff?: boolean;
 }
+
+/** Câu hỏi gợi ý hiện khi khách chưa hỏi gì */
+const QUICK_QUESTIONS = [
+  "Nên chọn Di Sản, Thanh Vị hay Dưỡng Vị?",
+  "Kiểm tra hàng thật bằng QR thế nào?",
+  "Cho mình báo giá mua số lượng lớn",
+];
 
 const INITIAL_MESSAGES: Message[] = [
   {
     id: "1",
     role: "bot",
-    text: "Xin chào! Tôi là trợ lý AI của Phong Triều 🐟 Tôi có thể giúp bạn tìm hiểu về sản phẩm, đặt hàng hoặc tư vấn loại nước mắm phù hợp!",
+    text: "Xin chào! Mình là Bé Cá, trợ lý của Phong Triều 🐟 Bạn có thể hỏi mình về nước mắm, cách chọn mua, cách pha nước chấm, cách bảo quản, đọc nhãn, mã QR...",
     time: "", // gán sau khi mount để không lệch giữa server và client
   },
 ];
@@ -26,6 +39,8 @@ export default function FloatingChatbot() {
   const [messages, setMessages] = useState<Message[]>(INITIAL_MESSAGES);
   const [input, setInput] = useState("");
   const [isTyping, setIsTyping] = useState(false);
+  const [leadOpen, setLeadOpen] = useState(false);
+  const [suggestions, setSuggestions] = useState<string[]>([]);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -36,54 +51,73 @@ export default function FloatingChatbot() {
   // Auto-scroll to bottom on new message
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages]);
+  }, [messages, leadOpen]);
 
-  const handleSend = async () => {
-    if (!input.trim()) return;
+  const nowTime = () => new Date().toLocaleTimeString("vi-VN", { hour: "2-digit", minute: "2-digit" });
 
-    const userMsg: Message = {
-      id: Date.now().toString(),
-      role: "user",
-      text: input.trim(),
-      time: new Date().toLocaleTimeString("vi-VN", {
-        hour: "2-digit",
-        minute: "2-digit",
-      }),
-    };
+  // Dự phòng khi trợ lý AI không phản hồi được: luôn dẫn khách tới hotline thay vì để họ chờ vô ích
+  const FALLBACK_REPLY =
+    "Xin lỗi, hiện mình chưa trả lời được câu hỏi này. Bạn vui lòng gọi hotline 0979 425 607 hoặc gửi lời nhắn ở trang Liên hệ để đội ngũ Phong Triều hỗ trợ nhé!";
+
+  const send = async (raw: string) => {
+    const question = raw.trim();
+    if (!question || isTyping) return;
+
+    const userMsg: Message = { id: `u-${Date.now()}`, role: "user", text: question, time: nowTime() };
+    // Gửi kèm vài lượt gần nhất (không gồm lời chào ban đầu) để bot hiểu câu hỏi nối tiếp
+    const history = messages
+      .filter((m) => m.id !== "1")
+      .slice(-6)
+      .map((m) => ({ role: m.role, text: m.text }));
 
     setMessages((prev) => [...prev, userMsg]);
+    setSuggestions([]);
     setInput("");
     setIsTyping(true);
 
-    // Simulate AI response (placeholder for real API integration)
-    setTimeout(() => {
-      const botReplies: Record<string, string> = {
-        mắm: "Phong Triều có 3 dòng sản phẩm: Di Sản, Thanh Vị và Dưỡng Vị. Bạn muốn tìm hiểu dòng nào?",
-        giá: "Bạn vui lòng liên hệ hotline 0979 425 607 để được báo giá và tư vấn đặt số lượng lớn nhé!",
-        "đặt hàng": "Bạn có thể gửi lời nhắn qua trang Liên hệ hoặc gọi hotline 0979 425 607 để được hỗ trợ đặt hàng.",
-        default:
-          "Cảm ơn bạn đã quan tâm! Vui lòng để lại thông tin qua trang Liên hệ hoặc gọi hotline 0979 425 607 để được tư vấn chi tiết.",
-      };
+    let botMsg: Message;
+    let askLead = false;
+    try {
+      const res = await fetch("/api/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ message: question, history }),
+      });
+      const data = await res.json().catch(() => ({}));
+      if (res.ok && data.success && typeof data.reply === "string") {
+        botMsg = { id: `b-${Date.now()}`, role: "bot", text: data.reply, time: nowTime(), sources: data.sources };
+        askLead = data.askLead === true;
+        botMsg.handoff = data.handoff === true;
+        if (Array.isArray(data.suggestions)) {
+          setSuggestions(data.suggestions.filter((q: unknown): q is string => typeof q === "string").slice(0, 3));
+        }
+      } else {
+        // 429: hiển thị đúng thông báo của máy chủ; lỗi khác: dùng câu dự phòng
+        const text = res.status === 429 && data.message ? data.message : FALLBACK_REPLY;
+        botMsg = { id: `b-${Date.now()}`, role: "bot", text, time: nowTime(), handoff: true };
+      }
+    } catch {
+      botMsg = { id: `b-${Date.now()}`, role: "bot", text: FALLBACK_REPLY, time: nowTime(), handoff: true };
+    }
 
-      const lower = userMsg.text.toLowerCase();
-      const reply =
-        Object.entries(botReplies).find(([key]) => key !== "default" && lower.includes(key))?.[1] ||
-        botReplies.default;
+    setIsTyping(false);
+    setMessages((prev) => [...prev, botMsg]);
+    if (askLead) setLeadOpen(true);
+  };
 
-      setIsTyping(false);
-      setMessages((prev) => [
-        ...prev,
-        {
-          id: Date.now().toString(),
-          role: "bot",
-          text: reply,
-          time: new Date().toLocaleTimeString("vi-VN", {
-            hour: "2-digit",
-            minute: "2-digit",
-          }),
-        },
-      ]);
-    }, 1200);
+  const handleSend = () => send(input);
+
+  // Điền sẵn nội dung khách đã hỏi để nhân viên nắm nhu cầu khi gọi lại
+  const leadNote = messages
+    .filter((m) => m.role === "user")
+    .slice(-3)
+    .map((m) => m.text)
+    .join(" / ")
+    .slice(0, 600);
+
+  const finishLead = (text: string) => {
+    setLeadOpen(false);
+    setMessages((prev) => [...prev, { id: `b-${Date.now()}`, role: "bot", text, time: nowTime() }]);
   };
 
   return (
@@ -94,9 +128,13 @@ export default function FloatingChatbot() {
           "fixed bottom-24 right-4 sm:right-6 z-50 w-[340px] sm:w-[380px]",
           "transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)]",
           isOpen
-            ? "opacity-100 scale-100 translate-y-0 pointer-events-auto"
-            : "opacity-0 scale-90 translate-y-4 pointer-events-none"
+            ? "visible opacity-100 scale-100 translate-y-0 pointer-events-auto"
+            : "invisible opacity-0 scale-90 translate-y-4 pointer-events-none"
         )}
+        id="chatbot-window"
+        role="dialog"
+        aria-label="Trò chuyện với Bé Cá Phong Triều"
+        aria-hidden={!isOpen}
       >
         <div className="bg-card rounded-3xl shadow-sm overflow-hidden border border-primary/10">
           {/* Chat Header */}
@@ -116,11 +154,12 @@ export default function FloatingChatbot() {
               </p>
               <div className="flex items-center gap-1.5">
                 <span className="w-2 h-2 bg-accent rounded-full animate-pulse" />
-                <span className="text-white/70 text-xs">đang gõ...</span>
+                <span className="text-white/70 text-xs">{isTyping ? "đang gõ..." : "trực tuyến"}</span>
               </div>
             </div>
             <button
               onClick={() => setIsOpen(false)}
+              aria-label="Đóng khung trò chuyện"
               className="text-white/70 hover:text-white transition-colors"
             >
               <X size={18} />
@@ -131,12 +170,12 @@ export default function FloatingChatbot() {
           <div className="px-4 py-2 bg-primary/5 border-b border-primary/10">
             <div className="flex items-center gap-1.5 text-xs text-primary font-epilogue">
               <Sparkles size={12} />
-              <span>Được hỗ trợ bởi AI — Tích hợp đầy đủ ở Phase tiếp theo</span>
+              <span>Trả lời tự động từ tài liệu của Phong Triều, có thể chưa đầy đủ. Cần chắc chắn hãy gọi hotline 0979 425 607.</span>
             </div>
           </div>
 
           {/* Messages */}
-          <div className="h-[280px] overflow-y-auto p-4 space-y-3 bg-background">
+          <div className="h-[280px] overflow-y-auto p-4 space-y-3 bg-background" aria-live="polite">
             {messages.map((msg) => (
               <div
                 key={msg.id}
@@ -158,7 +197,41 @@ export default function FloatingChatbot() {
                       : "bg-primary text-white rounded-tr-sm"
                   )}
                 >
-                  <p className={msg.role === "bot" ? "text-foreground" : "text-white"}>{msg.text}</p>
+                  <p className={cn("whitespace-pre-line break-words", msg.role === "bot" ? "text-foreground" : "text-white")}>
+                    {msg.text}
+                  </p>
+                  {msg.sources && msg.sources.length > 0 && (
+                    <div className="mt-2 border-t border-primary/10 pt-2 text-xs">
+                      <span className="text-text-muted">Xem thêm: </span>
+                      {msg.sources.map((src, i) => (
+                        <span key={src.slug}>
+                          {i > 0 && " · "}
+                          <Link href={`/tin-tuc/${src.slug}`} className="font-medium text-primary underline underline-offset-2">
+                            {src.title}
+                          </Link>
+                        </span>
+                      ))}
+                    </div>
+                  )}
+                  {msg.handoff && (
+                    <div className="mt-2 flex flex-wrap gap-1.5">
+                      <a
+                        href="tel:0979425607"
+                        className="inline-flex items-center gap-1 rounded-full bg-primary px-2.5 py-1 text-xs font-medium text-white hover:bg-primary-hover transition-colors"
+                      >
+                        <Phone size={12} /> Gọi 0979 425 607
+                      </a>
+                      {!leadOpen && (
+                        <button
+                          type="button"
+                          onClick={() => setLeadOpen(true)}
+                          className="rounded-full border border-primary/30 px-2.5 py-1 text-xs text-primary hover:bg-primary/5 transition-colors"
+                        >
+                          Nhờ nhân viên gọi lại
+                        </button>
+                      )}
+                    </div>
+                  )}
                   <p
                     className={cn(
                       "text-[10px] mt-1",
@@ -190,11 +263,36 @@ export default function FloatingChatbot() {
                 </div>
               </div>
             )}
+            {leadOpen && <ChatLeadForm defaultNote={leadNote} onDone={finishLead} onCancel={() => setLeadOpen(false)} />}
             <div ref={messagesEndRef} />
           </div>
 
+          {/* Gợi ý nhanh + nút để lại thông tin */}
+          {!leadOpen && (
+            <div className="px-3 pt-2 bg-card border-t border-primary/10 flex flex-wrap gap-1.5">
+              {(messages.length <= 1 ? QUICK_QUESTIONS : suggestions).map((q) => (
+                  <button
+                    key={q}
+                    type="button"
+                    onClick={() => send(q)}
+                    disabled={isTyping}
+                    className="text-xs text-primary border border-primary/25 rounded-full px-2.5 py-1 hover:bg-primary/5 transition-colors disabled:opacity-40"
+                  >
+                    {q}
+                  </button>
+                ))}
+              <button
+                type="button"
+                onClick={() => setLeadOpen(true)}
+                className="text-xs text-white bg-primary hover:bg-primary-hover rounded-full px-2.5 py-1 transition-colors"
+              >
+                Để lại thông tin để được gọi lại
+              </button>
+            </div>
+          )}
+
           {/* Input */}
-          <div className="p-3 border-t border-primary/10 bg-card">
+          <div className="p-3 bg-card" style={leadOpen ? { borderTop: "1px solid rgb(0 0 0 / 0.06)" } : undefined}>
             <form
               onSubmit={(e) => {
                 e.preventDefault();
@@ -206,6 +304,8 @@ export default function FloatingChatbot() {
                 type="text"
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
+                maxLength={500}
+                aria-label="Câu hỏi của bạn"
                 placeholder="Nhập câu hỏi của bạn..."
                 className="flex-1 text-sm text-foreground placeholder:text-text-muted bg-background
                            rounded-full px-4 py-2.5 outline-none border border-primary/15
@@ -213,7 +313,8 @@ export default function FloatingChatbot() {
               />
               <button
                 type="submit"
-                disabled={!input.trim()}
+                disabled={!input.trim() || isTyping}
+                aria-label="Gửi câu hỏi"
                 className="w-9 h-9 rounded-full bg-primary hover:bg-primary-hover transition-colors duration-300
                            flex items-center justify-center text-white transition-all duration-200
                            disabled:opacity-40 disabled:cursor-not-allowed hover:-translate-y-0.5"
@@ -229,7 +330,9 @@ export default function FloatingChatbot() {
       <button
         id="chatbot-fab"
         onClick={() => setIsOpen(!isOpen)}
-        aria-label="Mở chatbot hỗ trợ"
+        aria-label={isOpen ? "Đóng chatbot hỗ trợ" : "Mở chatbot hỗ trợ"}
+        aria-expanded={isOpen}
+        aria-controls="chatbot-window"
         className={cn(
           "fixed bottom-6 right-4 sm:right-6 z-50",
           "w-14 h-14 rounded-full",
