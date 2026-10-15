@@ -158,12 +158,6 @@ export default function AdminLoginPage() {
               </div>
             </div>
 
-            {/* Credentials Hint Pill */}
-            <div className="p-3 rounded-xl bg-[#F8F3EA] border border-[#EADFCF] text-[11px] text-[#7A6458] leading-relaxed">
-              <span className="font-semibold text-[#8A2E1B]">Thông tin mặc định:</span>{" "}
-              Tài khoản: <code className="font-mono text-[#2C1A14] font-bold">admin</code> | Mật khẩu: <code className="font-mono text-[#2C1A14] font-bold">phongtrieu2026</code>
-            </div>
-
             {/* Submit Button */}
             <button
               type="submit"
