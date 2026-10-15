@@ -35,6 +35,9 @@ interface VerificationData {
   };
 }
 
+// Website chính thức hiển thị cho khách (không phụ thuộc giá trị đã lưu trong lô cũ)
+const officialSite = process.env.NEXT_PUBLIC_APP_URL?.trim() || "https://www.mamdisanphongtrieu.com";
+
 export default function VerificationPage() {
   const params = useParams();
   const codeId = typeof params.codeId === "string" ? params.codeId : "";
@@ -499,7 +502,7 @@ export default function VerificationPage() {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
                 {/* Website */}
                 <a
-                  href={data.batch.websiteUrl || "https://phongtrieu.com"}
+                  href={officialSite}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-center justify-between p-4 rounded-2xl bg-white/10 hover:bg-white/20 border border-white/20 transition group"
@@ -511,7 +514,7 @@ export default function VerificationPage() {
                         Website chính thức
                       </span>
                       <span className="text-xs font-bold text-white">
-                        phongtrieu.com
+                        {officialSite.replace(/^https?:\/\//, "")}
                       </span>
                     </div>
                   </div>

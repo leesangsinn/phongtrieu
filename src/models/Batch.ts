@@ -45,7 +45,7 @@ const BatchSchema: Schema<IBatch> = new Schema(
     },
     websiteUrl: {
       type: String,
-      default: "https://phongtrieu.com",
+      default: "https://www.mamdisanphongtrieu.com",
       trim: true,
     },
     contactPhone: {
