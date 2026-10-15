@@ -45,7 +45,7 @@ export function companyChunks(): KnowledgeChunk[] {
     "Sản phẩm là nước mắm truyền thống làm từ cá cơm và muối, theo phương pháp ủ chượp truyền thống.",
     "Thông điệp: \"Gió đưa vị biển, quyện về vị quê\". Triết lý: \"Giữ gìn cốt vị, mở lối trải nghiệm\".",
     "Phong Triều có ba dòng nước mắm với ba mức độ mặn khác nhau: Di Sản, Thanh Vị và Dưỡng Vị, để phù hợp khẩu vị và nhu cầu khác nhau của gia đình Việt.",
-    "Website: https://phongtrieu.vercel.app. Hotline: 0979 425 607. Email: mamdisanphongtrieu@gmail.com.",
+    "Website: https://www.mamdisanphongtrieu.com. Hotline: 0979 425 607. Email: mamdisanphongtrieu@gmail.com.",
   ]);
 
   add("brand:cau-chuyen", "Câu chuyện, ý nghĩa tên gọi, tầm nhìn và sứ mệnh Phong Triều", [

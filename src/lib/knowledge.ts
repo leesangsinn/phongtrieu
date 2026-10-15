@@ -42,7 +42,7 @@ export const COMPANY_FACTS = [
   "Ba dòng sản phẩm: Di Sản, Thanh Vị, Dưỡng Vị. Xem thông tin tại trang Sản phẩm (/san-pham).",
   "Hotline: 0979 425 607. Email: mamdisanphongtrieu@gmail.com.",
   "Gửi lời nhắn cho đội ngũ tại trang Liên hệ (/lien-he). Tìm điểm bán hoặc đăng ký làm đại lý tại trang Đại lý (/dai-ly).",
-  "Website: https://phongtrieu.vercel.app. Khu vực sản xuất: Quỳnh Phú, Nghệ An. Địa chỉ văn phòng/cửa hàng: đang cập nhật.",
+  "Website: https://www.mamdisanphongtrieu.com. Khu vực sản xuất: Quỳnh Phú, Nghệ An. Địa chỉ văn phòng/cửa hàng: đang cập nhật.",
 ].join("\n");
 
 // ───────────────── Chuẩn hóa & tách từ ─────────────────
