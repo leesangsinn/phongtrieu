@@ -24,7 +24,6 @@ export const metadata: Metadata = {
 // Ảnh dùng trong trang (đều nằm trong /public)
 const IMG = {
   sunset: "/thuyen-cauchuyen.jpg",
-  stirring: "/1790930439418_5418089955404882545_g7806269425997013012_bbfcaca38aef6dda8de5faea44647bb4.jpg",
   bowl: "/doi-moi-co-chon-loc.jpg",
   philosophy: "/cauchuyen-triet-ly.jpg",
   village: "/di-san-nghe-mam.jpg",
