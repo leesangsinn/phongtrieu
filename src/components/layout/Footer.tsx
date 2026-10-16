@@ -112,7 +112,7 @@ export default function Footer() {
       </div>
 
       <div className="border-t border-background/15">
-        <div className="container-custom py-5 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-background/60">
+        <div className="container-custom py-5 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-background/80">
           <p>© {new Date().getFullYear()} Phong Triều. Tất cả quyền được bảo lưu.</p>
           <div className="flex items-center gap-4">
             <Link href="#" className="hover:text-background">
