@@ -14,6 +14,7 @@ import {
   Waves,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import ContactGallery from "@/components/contact/ContactGallery";
 
 const topics = [
   { id: "Tư vấn sản phẩm", icon: MessageCircle, text: "Tìm hiểu các dòng nước mắm và cách lựa chọn phù hợp." },
@@ -112,6 +113,9 @@ export default function ContactBlock() {
           </div>
         </div>
       </section>
+
+      {/* ───────── Băng ảnh làng biển ───────── */}
+      <ContactGallery />
 
       {/* ───────── Thông tin liên hệ + biểu mẫu ───────── */}
       <section id="loi-nhan" className="scroll-mt-24 bg-surface section-padding">
