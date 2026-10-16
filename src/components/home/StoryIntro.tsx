@@ -66,8 +66,8 @@ export default function StoryIntro() {
           <div className={`story-photo ${polaroid} left-[4%] top-0 w-[62%] -rotate-3 z-10`}>
             <div className="relative aspect-[4/3]">
               <Image
-                src="/1790930439418_5418089955404882545_g7806269425997013012_bbfcaca38aef6dda8de5faea44647bb4.jpg"
-                alt="Thợ khuấy lu mắm dưới ánh hoàng hôn"
+                src="/trangchu1.jpg"
+                alt="Người dân gánh muối dưới ánh hoàng hôn"
                 fill
                 sizes="(max-width: 768px) 60vw, 28vw"
                 className="object-cover"
@@ -77,8 +77,8 @@ export default function StoryIntro() {
           <div className={`story-photo ${polaroid} right-0 top-[18%] w-[48%] rotate-3`}>
             <div className="relative aspect-[3/4]">
               <Image
-                src="/di-san-nghe-mam.jpg"
-                alt="Hàng lu sành ủ chượp"
+                src="/trangchu2.jpg"
+                alt="Ngư dân kéo lưới trên bãi biển lúc bình minh"
                 fill
                 sizes="(max-width: 768px) 45vw, 22vw"
                 className="object-cover"
@@ -88,8 +88,8 @@ export default function StoryIntro() {
           <div className={`story-photo ${polaroid} left-[22%] bottom-0 w-[50%] rotate-2 z-20`}>
             <div className="relative aspect-[4/3]">
               <Image
-                src="/1790927709320_1538596632979904027_g7806269425997013012_dff38a892ba96fd7ad4055a1fc5f6c29.jpg"
-                alt="Hàng lu mắm dưới rặng dừa"
+                src="/trangchu3.jpg"
+                alt="Ngư dân quăng lưới trên mặt nước lúc hoàng hôn"
                 fill
                 sizes="(max-width: 768px) 50vw, 24vw"
                 className="object-cover"
