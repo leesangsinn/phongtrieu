@@ -26,6 +26,7 @@ const IMG = {
   sunset: "/thuyen-cauchuyen.jpg",
   stirring: "/1790930439418_5418089955404882545_g7806269425997013012_bbfcaca38aef6dda8de5faea44647bb4.jpg",
   bowl: "/doi-moi-co-chon-loc.jpg",
+  philosophy: "/cauchuyen-triet-ly.jpg",
   village: "/di-san-nghe-mam.jpg",
   mascot: "/linh-vat-cutout.png",
 };
@@ -194,8 +195,8 @@ export default function StoryPage() {
       <section className="bg-background section-padding overflow-hidden">
         <div className="container-custom grid items-center gap-12 lg:grid-cols-3">
           <div data-reveal className="relative">
-            <div className="relative aspect-[4/3] overflow-hidden rounded-[32px] shadow-brand">
-              <Image src={IMG.bowl} alt="Rót nước mắm cốt" fill sizes="(max-width: 1024px) 100vw, 33vw" className="object-cover" />
+            <div className="relative aspect-square overflow-hidden rounded-[32px] shadow-brand">
+              <Image src={IMG.philosophy} alt="Bữa cơm Việt với chai nước mắm Phong Triều Thanh Vị: Nếm vị quê, hiểu vị nhà" fill sizes="(max-width: 1024px) 100vw, 33vw" className="object-cover" />
             </div>
             <Image
               src={IMG.mascot}
