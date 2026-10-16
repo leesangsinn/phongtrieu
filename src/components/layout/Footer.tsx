@@ -14,7 +14,7 @@ export default function Footer() {
   const columns = [navLinks.slice(0, half), navLinks.slice(half)];
 
   return (
-    <footer className="relative bg-earth-dark text-foreground">
+    <footer className="relative bg-earth-dark text-background">
       {/* Viền lượn sóng phân cách với thân trang */}
       <svg
         className="absolute left-0 right-0 -top-[39px] w-full h-10 text-earth-dark"
@@ -33,7 +33,7 @@ export default function Footer() {
           {/* Brand */}
           <div>
             <Link href="/" className="flex items-center gap-3 mb-4">
-              <div className="w-12 h-12 rounded-full overflow-hidden border border-foreground/25 bg-card">
+              <div className="w-12 h-12 rounded-full overflow-hidden border border-background/40 bg-card">
                 <Image
                   alt="Phong Triều Logo"
                   className="object-cover w-full h-full"
@@ -43,11 +43,11 @@ export default function Footer() {
                 />
               </div>
               <div className="leading-tight">
-                <p className="font-playfair font-bold text-xl text-foreground">Phong Triều</p>
-                <p className="text-xs tracking-wide text-foreground/80">Vị biển · Tình quê</p>
+                <p className="font-playfair font-bold text-xl text-background">Phong Triều</p>
+                <p className="text-xs tracking-wide text-background/70">Vị biển · Tình quê</p>
               </div>
             </Link>
-            <p className="font-playfair italic text-foreground/80 max-w-xs">
+            <p className="font-playfair italic text-background/70 max-w-xs">
               Gió đưa vị biển, quyện về vị quê.
             </p>
           </div>
@@ -60,7 +60,7 @@ export default function Footer() {
                   <li key={link.href}>
                     <Link
                       href={link.href}
-                      className="text-sm text-foreground/85 hover:text-foreground hover:underline"
+                      className="text-sm text-background/80 hover:text-white"
                     >
                       {link.label}
                     </Link>
@@ -72,14 +72,14 @@ export default function Footer() {
 
           {/* Social */}
           <div>
-            <h4 className="font-playfair font-semibold text-foreground mb-4">Theo dõi chúng tôi</h4>
+            <h4 className="font-playfair font-semibold text-background mb-4">Theo dõi chúng tôi</h4>
             <div className="flex items-center gap-3">
               {socials.map(({ icon: Icon, label, href }) => (
                 <Link
                   key={label}
                   href={href}
                   aria-label={label}
-                  className="w-10 h-10 rounded-full bg-foreground/10 hover:bg-foreground hover:text-foreground hover:underline flex items-center justify-center transition-colors"
+                  className="w-10 h-10 rounded-full bg-background/10 hover:bg-background hover:text-earth-dark flex items-center justify-center transition-colors"
                 >
                   <Icon size={18} />
                 </Link>
@@ -89,19 +89,19 @@ export default function Footer() {
 
           {/* Contact */}
           <div>
-            <h4 className="font-playfair font-semibold text-foreground mb-4">Liên hệ</h4>
-            <ul className="space-y-3 text-sm text-foreground/85">
+            <h4 className="font-playfair font-semibold text-background mb-4">Liên hệ</h4>
+            <ul className="space-y-3 text-sm text-background/80">
               <li>
                 <a
                   href="mailto:mamdisanphongtrieu@gmail.com"
-                  className="flex items-center gap-2.5 hover:text-foreground hover:underline break-all"
+                  className="flex items-center gap-2.5 hover:text-white break-all"
                 >
                   <Mail size={16} className="shrink-0" />
                   mamdisanphongtrieu@gmail.com
                 </a>
               </li>
               <li>
-                <a href="tel:0979425607" className="flex items-center gap-2.5 hover:text-foreground hover:underline">
+                <a href="tel:0979425607" className="flex items-center gap-2.5 hover:text-white">
                   <Phone size={16} className="shrink-0" />
                   0979 425 607
                 </a>
@@ -111,15 +111,15 @@ export default function Footer() {
         </div>
       </div>
 
-      <div className="border-t border-foreground/20">
-        <div className="container-custom py-5 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-foreground/75">
+      <div className="border-t border-background/15">
+        <div className="container-custom py-5 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-background/60">
           <p>© {new Date().getFullYear()} Phong Triều. Tất cả quyền được bảo lưu.</p>
           <div className="flex items-center gap-4">
-            <Link href="#" className="hover:text-foreground hover:underline">
+            <Link href="#" className="hover:text-background">
               Chính sách bảo mật
             </Link>
             <span>·</span>
-            <Link href="#" className="hover:text-foreground hover:underline">
+            <Link href="#" className="hover:text-background">
               Điều khoản sử dụng
             </Link>
           </div>
