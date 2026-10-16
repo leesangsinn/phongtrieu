@@ -38,7 +38,7 @@ export default function NewsPage() {
               data-reveal="0.1"
               className="font-playfair text-4xl italic leading-[1.15] text-primary md:text-5xl lg:text-6xl"
             >
-              Những câu chuyện nhỏ về vị mắm lớn.
+              Chuyện làng biển, chuyện nghề làm mắm.
             </h1>
             <p data-reveal="0.2" className="mt-6 max-w-md text-lg">
               Cùng Phong Triều khám phá những kiến thức hữu ích, những câu chuyện thú vị và cập nhật
@@ -48,8 +48,8 @@ export default function NewsPage() {
 
           <div data-reveal="0.2" className="relative mx-auto aspect-[4/3] w-full max-w-xl overflow-hidden rounded-[32px] shadow-brand">
             <Image
-              src="/1790930439418_5418089955404882545_g7806269425997013012_bbfcaca38aef6dda8de5faea44647bb4.jpg"
-              alt="Thợ khuấy lu nước mắm lúc hoàng hôn"
+              src="/tintucbanner.jpg"
+              alt="Chuyện làng biển, chuyện nghề làm mắm"
               fill
               priority
               sizes="(max-width: 1024px) 100vw, 50vw"

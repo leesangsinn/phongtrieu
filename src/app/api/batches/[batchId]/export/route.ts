@@ -158,7 +158,7 @@ export async function GET(req: NextRequest, { params }: RouteParams) {
       }
     })();
 
-    const safeFilename = `QRCodes_${safeName(batch.batchCode)}.zip`;
+    const safeFilename = `QRCodes_${safeName(batch.batchCode)}_${safeName(batch.volume)}.zip`;
 
     return new NextResponse(Readable.toWeb(output) as unknown as ReadableStream, {
       status: 200,

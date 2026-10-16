@@ -8,6 +8,19 @@ import { getAppUrl } from "@/lib/app-url";
 
 export const dynamic = "force-dynamic";
 
+// Index cũ `batchCode_1` (unique chỉ theo mã lô) sẽ chặn việc tạo dung tích khác -> gỡ một lần rồi đồng bộ index mới.
+let indexesReady = false;
+async function ensureBatchIndexes() {
+  if (indexesReady) return;
+  try {
+    await Batch.collection.dropIndex("batchCode_1");
+  } catch {
+    // Index không tồn tại (đã gỡ trước đó hoặc DB mới) -> bỏ qua
+  }
+  await Batch.createIndexes();
+  indexesReady = true;
+}
+
 export async function POST(req: NextRequest) {
   const denied = await requireAdmin(req);
   if (denied) return denied;
@@ -82,14 +95,15 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // 2. Check if batchCode already exists
+    // 2. Chỉ chặn khi trùng cả mã lô lẫn dung tích (cùng mã lô vẫn được tạo cho dung tích khác)
+    await ensureBatchIndexes();
     const normalizedBatchCode = String(batchCode).trim().toUpperCase();
-    const existingBatch = await Batch.findOne({ batchCode: normalizedBatchCode });
+    const existingBatch = await Batch.findOne({ batchCode: normalizedBatchCode, volume });
     if (existingBatch) {
       return NextResponse.json(
         {
           success: false,
-          message: `Mã lô sản xuất "${normalizedBatchCode}" đã tồn tại. Vui lòng chọn mã lô khác.`,
+          message: `Mã lô "${normalizedBatchCode}" dung tích ${volume} đã tồn tại. Hãy đổi mã lô hoặc chọn dung tích khác.`,
         },
         { status: 400 }
       );

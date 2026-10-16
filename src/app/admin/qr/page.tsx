@@ -14,6 +14,7 @@ import {
   AlertCircle,
   Search,
   Tag,
+  Trash2,
 } from "lucide-react";
 
 interface BatchItem {
@@ -82,6 +83,7 @@ export default function AdminQRPage() {
   const [batches, setBatches] = useState<BatchItem[]>([]);
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [exportingId, setExportingId] = useState<string | null>(null);
+  const [deletingId, setDeletingId] = useState<string | null>(null);
 
   // Notification Banner
   const [feedback, setFeedback] = useState<{
@@ -208,6 +210,38 @@ export default function AdminQRPage() {
       alert(`Lỗi khi tải file ZIP: ${err.message}`);
     } finally {
       setExportingId(null);
+    }
+  };
+
+  // Xóa lô (kèm toàn bộ mã QR) sau khi người dùng xác nhận
+  const handleDeleteBatch = async (batch: BatchItem) => {
+    const scanned = batch.scannedQR || 0;
+    const warning =
+      scanned > 0
+        ? `\n\n⚠ Lô này đã có ${scanned} mã được khách quét. Tem đã in sẽ không còn xác thực được.`
+        : "";
+    const ok = window.confirm(
+      `Bạn có chắc chắn muốn xóa lô "${batch.batchCode}" (${batch.productLine} - ${batch.volume}) cùng ${(
+        batch.totalQR || 0
+      ).toLocaleString()} mã QR không?${warning}\n\nHành động này không thể hoàn tác.`
+    );
+    if (!ok) return;
+
+    try {
+      setDeletingId(batch._id);
+      setFeedback(null);
+      const res = await fetch(`/api/batches/${batch._id}`, { method: "DELETE" });
+      const data = await res.json();
+      if (!res.ok || !data.success) {
+        throw new Error(data.message || "Không thể xóa lô.");
+      }
+      setFeedback({ type: "success", message: data.message });
+      await fetchBatches();
+    } catch (error: unknown) {
+      const err = error as Error;
+      setFeedback({ type: "error", message: err.message || "Đã xảy ra sự cố khi xóa lô." });
+    } finally {
+      setDeletingId(null);
     }
   };
 
@@ -651,8 +685,8 @@ export default function AdminQRPage() {
                         })}
                       </td>
 
-                      {/* Thao Tác (Nút Xuất Excel) */}
-                      <td className="px-6 py-4 text-right">
+                      {/* Thao Tác (Nút Xuất Excel + Xóa lô) */}
+                      <td className="px-6 py-4 text-right whitespace-nowrap">
                         <button
                           onClick={() => handleExportExcel(b._id, b.batchCode)}
                           disabled={isExportingThis}
@@ -670,6 +704,19 @@ export default function AdminQRPage() {
                               <span>Tải File ZIP (Ảnh QR + Excel)</span>
                             </>
                           )}
+                        </button>
+                        <button
+                          onClick={() => handleDeleteBatch(b)}
+                          disabled={deletingId === b._id || isExportingThis}
+                          className="ml-2 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-red-50 hover:bg-red-100 border border-red-300 text-red-800 text-xs font-semibold transition active:scale-95 disabled:opacity-50"
+                          title="Xóa lô này cùng toàn bộ mã QR (dùng khi xuất thử hoặc xuất sai)"
+                        >
+                          {deletingId === b._id ? (
+                            <RefreshCw size={13} className="animate-spin" />
+                          ) : (
+                            <Trash2 size={14} />
+                          )}
+                          <span>Xóa</span>
                         </button>
                       </td>
                     </tr>

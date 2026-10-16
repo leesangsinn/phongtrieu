@@ -19,7 +19,6 @@ const BatchSchema: Schema<IBatch> = new Schema(
     batchCode: {
       type: String,
       required: [true, "Mã lô sản xuất là bắt buộc"],
-      unique: true,
       trim: true,
       uppercase: true,
     },
@@ -58,6 +57,9 @@ const BatchSchema: Schema<IBatch> = new Schema(
     timestamps: true,
   }
 );
+
+// Cùng một mã lô có thể đóng nhiều dung tích (500ml, 300ml...) nên chỉ cần duy nhất theo cặp.
+BatchSchema.index({ batchCode: 1, volume: 1 }, { unique: true });
 
 // Prevent mongoose model recompilation error in Next.js development HMR
 export const Batch: Model<IBatch> =
