@@ -28,7 +28,25 @@ export default function ProductsPage() {
 
       {/* ───────── 1. HERO ───────── */}
       <section className="relative overflow-hidden bg-background pt-28 pb-24 md:pt-36">
-        <div className="container-custom grid items-center gap-8 lg:grid-cols-2">
+        <div className="container-custom grid items-center gap-10 lg:grid-cols-[1.7fr_1fr] lg:gap-12">
+          <div data-reveal="0.2" className="relative lg:-ml-6 xl:-ml-10">
+            {/* Quầng sáng vàng phía sau ảnh */}
+            <div
+              aria-hidden
+              className="absolute -inset-4 rounded-[2.5rem] bg-gradient-to-br from-[#E8B86A]/45 via-[#C9A27A]/25 to-transparent blur-2xl"
+            />
+            <div className="group relative aspect-[1672/941] w-full overflow-hidden rounded-3xl ring-1 ring-[#C9A27A]/60 shadow-[0_30px_60px_-15px_rgba(44,26,20,0.6)]">
+              <Image
+                src="/san-pham-banner.png"
+                alt="Nước mắm Phong Triều – chén mắm sóng sánh cùng cá cơm và thùng ủ chượp"
+                fill
+                priority
+                sizes="(max-width: 1024px) 100vw, 65vw"
+                className="object-cover transition-transform duration-700 ease-out group-hover:scale-[1.03]"
+              />
+            </div>
+          </div>
+
           <div>
             <span data-reveal className={eyebrow}>
               <Waves size={16} />
@@ -36,27 +54,14 @@ export default function ProductsPage() {
             </span>
             <h1
               data-reveal="0.1"
-              className="font-playfair text-4xl italic leading-[1.15] text-primary md:text-5xl lg:text-6xl"
+              className="font-playfair text-4xl italic leading-[1.15] text-primary md:text-5xl lg:text-[2.75rem] xl:text-5xl"
             >
               Mỗi giọt mắm, một vị thương.
             </h1>
-            <p data-reveal="0.2" className="mt-6 max-w-md text-lg">
+            <p data-reveal="0.2" className="mt-6 max-w-md text-base xl:text-lg">
               Từ nguyên liệu tuyển chọn và quy trình ủ chượp truyền thống, Phong Triều mang đến những
               dòng nước mắm phù hợp với nhu cầu của gia đình hiện đại.
             </p>
-          </div>
-
-          <div data-reveal="0.2" className="relative mx-auto flex h-[320px] w-full max-w-md items-end justify-center md:h-[400px]">
-            <div className="absolute inset-x-0 bottom-0 top-10 rounded-[40px] bg-gradient-to-br from-surface via-[#F1E3D3] to-[#E3D2C0]" />
-            <Image
-              src="/linh-vat-cutout.png"
-              alt="Bé cá cơm Phong Triều ôm chai nước mắm"
-              width={776}
-              height={898}
-              priority
-              sizes="(max-width: 768px) 70vw, 360px"
-              className="relative z-10 w-[78%] max-w-[360px] animate-float drop-shadow-[0_20px_25px_rgba(44,26,20,0.3)]"
-            />
           </div>
         </div>
 
