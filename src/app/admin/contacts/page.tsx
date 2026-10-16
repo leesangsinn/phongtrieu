@@ -213,7 +213,7 @@ export default function AdminContactsPage() {
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
         <div>
           <div className="flex items-center gap-2.5">
-            <span className="p-2.5 rounded-2xl bg-[#8C3A21]/10 text-[#8C3A21] border border-[#8C3A21]/15">
+            <span className="p-2.5 rounded-2xl bg-[#7A0221]/10 text-[#7A0221] border border-[#7A0221]/15">
               <MessageSquare size={24} />
             </span>
             <h1 className="font-playfair text-2xl md:text-3xl font-bold tracking-tight text-[#2C1A14]">
@@ -234,7 +234,7 @@ export default function AdminContactsPage() {
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Tìm theo tên, email, sđt..."
               aria-label="Tìm khách hàng"
-              className="bg-white border border-[#E5D7C7] rounded-xl pl-9 pr-4 py-2 text-xs text-[#2C1A14] placeholder-[#7A6458]/70 focus:outline-none focus:ring-1 focus:ring-[#8C3A21] w-52 md:w-64 transition"
+              className="bg-white border border-[#E5D7C7] rounded-xl pl-9 pr-4 py-2 text-xs text-[#2C1A14] placeholder-[#7A6458]/70 focus:outline-none focus:ring-1 focus:ring-[#7A0221] w-52 md:w-64 transition"
             />
           </div>
           <button
@@ -244,7 +244,7 @@ export default function AdminContactsPage() {
             title="Làm mới"
             aria-label="Làm mới danh sách"
           >
-            <RefreshCw size={16} className={loading ? "animate-spin text-[#8C3A21]" : ""} />
+            <RefreshCw size={16} className={loading ? "animate-spin text-[#7A0221]" : ""} />
           </button>
         </div>
       </div>
@@ -261,7 +261,7 @@ export default function AdminContactsPage() {
               onClick={() => changeFilter(tab.key)}
               className={`inline-flex items-center gap-2 rounded-full border px-4 py-2 text-xs font-semibold transition ${
                 active
-                  ? "border-[#8C3A21] bg-[#8C3A21] text-white shadow-sm"
+                  ? "border-[#7A0221] bg-[#7A0221] text-white shadow-sm"
                   : "border-[#E5D7C7] bg-white text-[#2C1A14] hover:bg-[#F4ECE1]"
               }`}
             >
@@ -323,7 +323,7 @@ export default function AdminContactsPage() {
               {loading && contacts.length === 0 ? (
                 <tr>
                   <td colSpan={6} className="px-6 py-12 text-center text-[#7A6458]">
-                    <RefreshCw size={24} className="animate-spin text-[#8C3A21] mx-auto mb-2" />
+                    <RefreshCw size={24} className="animate-spin text-[#7A0221] mx-auto mb-2" />
                     Đang tải danh sách liên hệ...
                   </td>
                 </tr>
@@ -355,7 +355,7 @@ export default function AdminContactsPage() {
                           <div>
                             <button
                               onClick={() => setSelected(item)}
-                              className={`text-left text-[#2C1A14] hover:text-[#8C3A21] hover:underline ${isNew ? "font-bold" : "font-semibold"}`}
+                              className={`text-left text-[#2C1A14] hover:text-[#7A0221] hover:underline ${isNew ? "font-bold" : "font-semibold"}`}
                             >
                               {item.name}
                             </button>
@@ -369,7 +369,7 @@ export default function AdminContactsPage() {
                         {phone && (
                           <a
                             href={`tel:${phone.replace(/[^0-9+]/g, "")}`}
-                            className="flex items-center gap-1.5 font-mono font-semibold text-[#8C3A21] hover:underline"
+                            className="flex items-center gap-1.5 font-mono font-semibold text-[#7A0221] hover:underline"
                           >
                             <Phone size={12} /> {phone}
                           </a>
@@ -397,7 +397,7 @@ export default function AdminContactsPage() {
                           id={`status-${item._id}`}
                           value={status}
                           onChange={(e) => updateContact(item._id, { status: e.target.value as ContactStatus })}
-                          className={`cursor-pointer rounded-full border px-3 py-1 text-xs font-semibold outline-none focus-visible:ring-2 focus-visible:ring-[#8C3A21]/40 ${meta.badge}`}
+                          className={`cursor-pointer rounded-full border px-3 py-1 text-xs font-semibold outline-none focus-visible:ring-2 focus-visible:ring-[#7A0221]/40 ${meta.badge}`}
                         >
                           {(Object.keys(STATUS_META) as ContactStatus[]).map((s) => (
                             <option key={s} value={s}>
@@ -433,7 +433,7 @@ export default function AdminContactsPage() {
                         {isNew && (
                           <button
                             onClick={() => updateContact(item._id, { status: "contacted" })}
-                            className="mr-2 inline-flex items-center gap-1 rounded-lg bg-[#8C3A21] px-3 py-1.5 text-xs font-semibold text-white transition hover:bg-[#A95A32]"
+                            className="mr-2 inline-flex items-center gap-1 rounded-lg bg-[#7A0221] px-3 py-1.5 text-xs font-semibold text-white transition hover:bg-[#9C1A36]"
                           >
                             <Check size={13} /> Đã liên hệ
                           </button>
@@ -543,7 +543,7 @@ function ContactDetail({
                 <div className="flex items-center gap-2">
                   <a
                     href={`tel:${phone.replace(/[^0-9+]/g, "")}`}
-                    className="inline-flex flex-1 items-center gap-2 rounded-xl bg-[#8C3A21] px-4 py-2.5 text-sm font-semibold text-white hover:bg-[#A95A32]"
+                    className="inline-flex flex-1 items-center gap-2 rounded-xl bg-[#7A0221] px-4 py-2.5 text-sm font-semibold text-white hover:bg-[#9C1A36]"
                   >
                     <Phone size={15} /> Gọi {phone}
                   </a>
@@ -561,7 +561,7 @@ function ContactDetail({
                   href={`mailto:${contact.email}`}
                   className="flex items-center gap-2 rounded-xl border border-[#E5D7C7] bg-white px-4 py-2.5 text-sm font-medium hover:bg-[#F4ECE1]"
                 >
-                  <Mail size={15} className="text-[#8C3A21]" />
+                  <Mail size={15} className="text-[#7A0221]" />
                   <span className="break-all">{contact.email}</span>
                 </a>
               )}
@@ -589,7 +589,7 @@ function ContactDetail({
                     onClick={() => !active && onUpdate(contact._id, { status: s })}
                     aria-pressed={active}
                     className={`rounded-xl border px-2 py-2.5 text-xs font-semibold transition ${
-                      active ? STATUS_META[s].badge + " ring-2 ring-[#8C3A21]/20" : "border-[#E5D7C7] bg-white hover:bg-[#F4ECE1]"
+                      active ? STATUS_META[s].badge + " ring-2 ring-[#7A0221]/20" : "border-[#E5D7C7] bg-white hover:bg-[#F4ECE1]"
                     }`}
                   >
                     {STATUS_META[s].label}
@@ -619,14 +619,14 @@ function ContactDetail({
               maxLength={1000}
               rows={4}
               placeholder="Ví dụ: Đã gọi lúc 10h, hẹn gọi lại chiều mai..."
-              className="w-full rounded-xl border border-[#E5D7C7] bg-white px-4 py-3 text-sm outline-none focus-visible:ring-2 focus-visible:ring-[#8C3A21]/40"
+              className="w-full rounded-xl border border-[#E5D7C7] bg-white px-4 py-3 text-sm outline-none focus-visible:ring-2 focus-visible:ring-[#7A0221]/40"
             />
             <div className="mt-2 flex items-center justify-between">
               <span className="text-[11px] text-[#7A6458]">{note.length}/1000</span>
               <button
                 onClick={saveNote}
                 disabled={!dirty || saving}
-                className="rounded-lg bg-[#8C3A21] px-4 py-2 text-xs font-semibold text-white transition hover:bg-[#A95A32] disabled:cursor-not-allowed disabled:opacity-50"
+                className="rounded-lg bg-[#7A0221] px-4 py-2 text-xs font-semibold text-white transition hover:bg-[#9C1A36] disabled:cursor-not-allowed disabled:opacity-50"
               >
                 {saving ? "Đang lưu..." : "Lưu ghi chú"}
               </button>

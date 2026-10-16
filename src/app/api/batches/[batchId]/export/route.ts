@@ -54,7 +54,7 @@ async function buildExcel(
   const headerRow = ws.getRow(1);
   headerRow.height = 30;
   headerRow.eachCell((cell) => {
-    cell.fill = { type: "pattern", pattern: "solid", fgColor: { argb: "FF8C3A21" } };
+    cell.fill = { type: "pattern", pattern: "solid", fgColor: { argb: "FF7A0221" } };
     cell.font = { name: "Calibri", size: 11, bold: true, color: { argb: "FFFFFFFF" } };
     cell.alignment = { vertical: "middle", horizontal: "center" };
   });

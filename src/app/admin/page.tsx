@@ -85,7 +85,7 @@ export default function AdminDashboardPage() {
   return (
     <div className="space-y-8">
       {/* Welcome Hero Banner */}
-      <div className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-[#8A2E1B] via-[#9E3721] to-[#6E2213] text-white p-8 md:p-10 shadow-lg shadow-[#8A2E1B]/15">
+      <div className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-[#7A0221] via-[#9C1A36] to-[#5A0119] text-white p-8 md:p-10 shadow-lg shadow-[#7A0221]/15">
         <div className="relative z-10 max-w-2xl">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/15 border border-white/20 text-[#F5ECE1] text-xs font-semibold mb-4 backdrop-blur-xs">
             <Sparkles size={14} className="text-[#E9B98A]" />
@@ -100,7 +100,7 @@ export default function AdminDashboardPage() {
           <div className="mt-6 flex flex-wrap gap-3">
             <Link
               href="/admin/qr"
-              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-white hover:bg-[#FDF9F3] text-[#8A2E1B] text-sm font-bold shadow-md transition transform active:scale-95"
+              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-white hover:bg-[#FDF9F3] text-[#7A0221] text-sm font-bold shadow-md transition transform active:scale-95"
             >
               <QrCode size={16} />
               Quản Lý &amp; Sinh Tem QR
@@ -124,7 +124,7 @@ export default function AdminDashboardPage() {
             <span className="text-xs font-bold uppercase tracking-wider text-[#7A6458]">
               Lô Sản Xuất
             </span>
-            <span className="p-2.5 rounded-xl bg-[#8A2E1B]/10 text-[#8A2E1B] border border-[#8A2E1B]/15">
+            <span className="p-2.5 rounded-xl bg-[#7A0221]/10 text-[#7A0221] border border-[#7A0221]/15">
               <Layers size={18} />
             </span>
           </div>
@@ -142,12 +142,12 @@ export default function AdminDashboardPage() {
             <span className="text-xs font-bold uppercase tracking-wider text-[#7A6458]">
               Tem QR Đã Phát Hành
             </span>
-            <span className="p-2.5 rounded-xl bg-[#8A2E1B]/10 text-[#8A2E1B] border border-[#8A2E1B]/15">
+            <span className="p-2.5 rounded-xl bg-[#7A0221]/10 text-[#7A0221] border border-[#7A0221]/15">
               <QrCode size={18} />
             </span>
           </div>
           <div className="mt-4">
-            <span className="text-3xl font-bold text-[#8A2E1B]">
+            <span className="text-3xl font-bold text-[#7A0221]">
               {loading ? "..." : stats.totalQR.toLocaleString()}
             </span>
             <p className="text-xs text-[#7A6458] mt-1 font-medium">Mã UUID định danh duy nhất</p>
@@ -206,26 +206,26 @@ export default function AdminDashboardPage() {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <Link
           href="/admin/qr"
-          className="group p-6 rounded-3xl bg-white border border-[#EADFCF] hover:border-[#8A2E1B]/50 hover:shadow-md transition-all flex flex-col justify-between"
+          className="group p-6 rounded-3xl bg-white border border-[#EADFCF] hover:border-[#7A0221]/50 hover:shadow-md transition-all flex flex-col justify-between"
         >
           <div>
             <div className="flex items-center justify-between">
-              <span className="p-3 rounded-2xl bg-[#8A2E1B]/10 text-[#8A2E1B] border border-[#8A2E1B]/15">
+              <span className="p-3 rounded-2xl bg-[#7A0221]/10 text-[#7A0221] border border-[#7A0221]/15">
                 <QrCode size={22} />
               </span>
               <ArrowRight
                 size={18}
-                className="text-[#7A6458] group-hover:text-[#8A2E1B] group-hover:translate-x-1 transition-all"
+                className="text-[#7A6458] group-hover:text-[#7A0221] group-hover:translate-x-1 transition-all"
               />
             </div>
-            <h3 className="font-playfair text-xl font-bold text-[#2C1A14] mt-4 group-hover:text-[#8A2E1B] transition-colors">
+            <h3 className="font-playfair text-xl font-bold text-[#2C1A14] mt-4 group-hover:text-[#7A0221] transition-colors">
               Quy trình Sinh Tem &amp; Xuất Excel Lô
             </h3>
             <p className="text-xs text-[#7A6458] mt-1.5 leading-relaxed">
               Tạo mẻ ủ nước mắm mới, tự động sinh mã định danh UUID v4 bảo mật và xuất trực tiếp file Excel định dạng chuẩn xưởng in.
             </p>
           </div>
-          <div className="mt-6 flex items-center gap-2 text-xs font-bold text-[#8A2E1B]">
+          <div className="mt-6 flex items-center gap-2 text-xs font-bold text-[#7A0221]">
             <span>Truy cập Quản lý QR</span>
             <ArrowRight size={14} />
           </div>
@@ -233,7 +233,7 @@ export default function AdminDashboardPage() {
 
         <Link
           href="/admin/partners"
-          className="group p-6 rounded-3xl bg-white border border-[#EADFCF] hover:border-[#8A2E1B]/50 hover:shadow-md transition-all flex flex-col justify-between"
+          className="group p-6 rounded-3xl bg-white border border-[#EADFCF] hover:border-[#7A0221]/50 hover:shadow-md transition-all flex flex-col justify-between"
         >
           <div>
             <div className="flex items-center justify-between">
@@ -242,17 +242,17 @@ export default function AdminDashboardPage() {
               </span>
               <ArrowRight
                 size={18}
-                className="text-[#7A6458] group-hover:text-[#8A2E1B] group-hover:translate-x-1 transition-all"
+                className="text-[#7A6458] group-hover:text-[#7A0221] group-hover:translate-x-1 transition-all"
               />
             </div>
-            <h3 className="font-playfair text-xl font-bold text-[#2C1A14] mt-4 group-hover:text-[#8A2E1B] transition-colors">
+            <h3 className="font-playfair text-xl font-bold text-[#2C1A14] mt-4 group-hover:text-[#7A0221] transition-colors">
               Hồ Sơ Đăng Ký Đại Lý &amp; Phân Phối
             </h3>
             <p className="text-xs text-[#7A6458] mt-1.5 leading-relaxed">
               Tiếp nhận và quản lý thông tin các nhà phân phối, cửa hàng thực phẩm, nhà hàng HORECA đăng ký hợp tác phân phối mắm Phong Triều.
             </p>
           </div>
-          <div className="mt-6 flex items-center gap-2 text-xs font-bold text-[#8A2E1B]">
+          <div className="mt-6 flex items-center gap-2 text-xs font-bold text-[#7A0221]">
             <span>Xem danh sách đối tác</span>
             <ArrowRight size={14} />
           </div>

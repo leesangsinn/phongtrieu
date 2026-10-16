@@ -36,7 +36,7 @@ const config: Config = {
       },
       backgroundImage: {
         "hero-gradient":
-          "linear-gradient(to right, rgba(44,26,20,0.9) 0%, rgba(140,58,33,0.5) 100%)",
+          "linear-gradient(to right, rgba(44,26,20,0.9) 0%, rgba(122, 2, 33,0.5) 100%)",
       },
       keyframes: {
         "fade-up": {
@@ -63,9 +63,9 @@ const config: Config = {
         "pulse-slow": "pulse 3s ease-in-out infinite",
       },
       boxShadow: {
-        brand: "0 10px 40px -10px rgba(140, 58, 33, 0.15)",
-        "card-hover": "0 10px 40px -10px rgba(140, 58, 33, 0.15)",
-        glow: "0 0 30px rgba(169, 90, 50, 0.25)",
+        brand: "0 10px 40px -10px rgba(122, 2, 33, 0.15)",
+        "card-hover": "0 10px 40px -10px rgba(122, 2, 33, 0.15)",
+        glow: "0 0 30px rgba(156, 26, 54, 0.25)",
       },
     },
   },

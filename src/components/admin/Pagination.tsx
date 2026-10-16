@@ -67,7 +67,7 @@ export default function Pagination({ page, totalPages, total, limit, onChange, d
               aria-current={item === page ? "page" : undefined}
               className={`${base} ${
                 item === page
-                  ? "border-[#8C3A21] bg-[#8C3A21] text-white"
+                  ? "border-[#7A0221] bg-[#7A0221] text-white"
                   : "border-[#E5D7C7] bg-white text-[#2C1A14] hover:bg-[#F4ECE1]"
               }`}
             >

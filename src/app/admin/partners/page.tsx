@@ -51,7 +51,7 @@ export default function AdminPartnersPage() {
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
         <div>
           <div className="flex items-center gap-2.5">
-            <span className="p-2.5 rounded-2xl bg-[#8A2E1B]/10 text-[#8A2E1B] border border-[#8A2E1B]/15">
+            <span className="p-2.5 rounded-2xl bg-[#7A0221]/10 text-[#7A0221] border border-[#7A0221]/15">
               <Handshake size={24} />
             </span>
             <h1 className="font-playfair text-2xl md:text-3xl font-bold tracking-tight text-[#2C1A14]">
@@ -71,7 +71,7 @@ export default function AdminPartnersPage() {
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Tìm tên, SĐT, tỉnh thành..."
-              className="bg-white border border-[#E5D7C7] rounded-xl pl-9 pr-4 py-2 text-xs text-[#2C1A14] placeholder-[#7A6458]/70 focus:outline-none focus:ring-1 focus:ring-[#8A2E1B] w-52 md:w-64 transition"
+              className="bg-white border border-[#E5D7C7] rounded-xl pl-9 pr-4 py-2 text-xs text-[#2C1A14] placeholder-[#7A6458]/70 focus:outline-none focus:ring-1 focus:ring-[#7A0221] w-52 md:w-64 transition"
             />
           </div>
           <button
@@ -80,7 +80,7 @@ export default function AdminPartnersPage() {
             className="p-2 bg-white hover:bg-[#F4ECE1] text-[#7A6458] hover:text-[#2C1A14] rounded-xl border border-[#E5D7C7] transition"
             title="Làm mới"
           >
-            <RefreshCw size={16} className={loading ? "animate-spin text-[#8A2E1B]" : ""} />
+            <RefreshCw size={16} className={loading ? "animate-spin text-[#7A0221]" : ""} />
           </button>
         </div>
       </div>
@@ -103,7 +103,7 @@ export default function AdminPartnersPage() {
               {loading ? (
                 <tr>
                   <td colSpan={7} className="px-6 py-12 text-center text-[#7A6458]">
-                    <RefreshCw size={24} className="animate-spin text-[#8A2E1B] mx-auto mb-2" />
+                    <RefreshCw size={24} className="animate-spin text-[#7A0221] mx-auto mb-2" />
                     Đang tải danh sách đối tác...
                   </td>
                 </tr>
@@ -117,7 +117,7 @@ export default function AdminPartnersPage() {
                 filtered.map((item) => (
                   <tr key={item._id} className="hover:bg-[#FAF6EE] transition-colors">
                     <td className="px-6 py-4 font-bold text-[#2C1A14]">{item.name}</td>
-                    <td className="px-6 py-4 text-xs text-[#8A2E1B] font-mono font-semibold">
+                    <td className="px-6 py-4 text-xs text-[#7A0221] font-mono font-semibold">
                       <a href={`tel:${item.phone}`} className="hover:underline flex items-center gap-1.5">
                         <Phone size={13} />
                         {item.phone}
@@ -130,7 +130,7 @@ export default function AdminPartnersPage() {
                     </td>
                     <td className="px-6 py-4 text-xs font-medium">
                       <span className="flex items-center gap-1 text-[#2C1A14]">
-                        <MapPin size={13} className="text-[#8A2E1B]" />
+                        <MapPin size={13} className="text-[#7A0221]" />
                         {item.city}
                       </span>
                     </td>

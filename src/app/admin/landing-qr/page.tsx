@@ -41,7 +41,7 @@ export default function AdminLandingQRPage() {
     <div className="space-y-6">
       <div>
         <h1 className="font-playfair text-2xl sm:text-3xl font-bold text-[#2C1A14] flex items-center gap-2.5">
-          <QrCode className="text-[#8A2E1B]" size={28} />
+          <QrCode className="text-[#7A0221]" size={28} />
           Mã QR Trang Web
         </h1>
         <p className="text-sm text-[#6B5B50] mt-1.5">
@@ -67,7 +67,7 @@ export default function AdminLandingQRPage() {
                 className="w-full max-w-[280px] h-auto"
               />
             ) : (
-              <div className="w-12 h-12 rounded-full border-4 border-[#8A2E1B]/20 border-t-[#8A2E1B] animate-spin" />
+              <div className="w-12 h-12 rounded-full border-4 border-[#7A0221]/20 border-t-[#7A0221] animate-spin" />
             )}
           </div>
 
@@ -77,7 +77,7 @@ export default function AdminLandingQRPage() {
                 Quét mã sẽ dẫn tới
               </p>
               <p className="flex items-center gap-2 text-sm font-semibold text-[#2C1A14] break-all">
-                <Globe size={16} className="text-[#8A2E1B] shrink-0" />
+                <Globe size={16} className="text-[#7A0221] shrink-0" />
                 {targetUrl || "..."}
               </p>
             </div>
@@ -92,7 +92,7 @@ export default function AdminLandingQRPage() {
               <a
                 href={svgHref}
                 download
-                className="inline-flex items-center gap-2 rounded-xl bg-[#8A2E1B] px-4 py-2.5 text-sm font-semibold text-white hover:bg-[#6F2415] transition"
+                className="inline-flex items-center gap-2 rounded-xl bg-[#7A0221] px-4 py-2.5 text-sm font-semibold text-white hover:bg-[#5A0119] transition"
               >
                 <Download size={16} /> Tải file SVG
               </a>
@@ -116,14 +116,14 @@ export default function AdminLandingQRPage() {
               <a
                 href={pngHref}
                 download
-                className="inline-flex items-center gap-2 rounded-xl border border-[#8A2E1B] px-4 py-2.5 text-sm font-semibold text-[#8A2E1B] hover:bg-[#8A2E1B]/5 transition"
+                className="inline-flex items-center gap-2 rounded-xl border border-[#7A0221] px-4 py-2.5 text-sm font-semibold text-[#7A0221] hover:bg-[#7A0221]/5 transition"
               >
                 <Download size={16} /> Tải ảnh PNG
               </a>
             </div>
 
             <div className="flex items-start gap-2.5 rounded-xl bg-[#FCF9F2] p-3.5 text-xs text-[#6B5B50]">
-              <Printer size={16} className="mt-0.5 shrink-0 text-[#8A2E1B]" />
+              <Printer size={16} className="mt-0.5 shrink-0 text-[#7A0221]" />
               <span>
                 Khi in, giữ nguyên viền trắng quanh mã, không đổi màu nền/mã và in tối thiểu 2×2 cm.
                 Nên in thử một bản và quét kiểm tra trước khi in số lượng lớn.

@@ -132,15 +132,15 @@ export default function VerificationPage() {
       <header className="sticky top-0 z-30 bg-[#FCF9F2]/90 backdrop-blur-md border-b border-[#EADFCF]">
         <div className="max-w-3xl mx-auto px-4 py-3.5 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-2 group">
-            <div className="w-8 h-8 rounded-lg bg-[#8C3A21] flex items-center justify-center text-white font-bold text-sm shadow-sm group-hover:scale-105 transition">
+            <div className="w-8 h-8 rounded-lg bg-[#7A0221] flex items-center justify-center text-white font-bold text-sm shadow-sm group-hover:scale-105 transition">
               PT
             </div>
-            <span className="font-playfair font-bold text-lg text-[#8C3A21] tracking-tight">
+            <span className="font-playfair font-bold text-lg text-[#7A0221] tracking-tight">
               Phong Triều
             </span>
           </Link>
           <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-[#7A6458]">
-            <ShieldCheck size={16} className="text-[#8C3A21]" />
+            <ShieldCheck size={16} className="text-[#7A0221]" />
             <span>Hệ Thống Xác Thực Nguồn Gốc</span>
           </div>
         </div>
@@ -151,7 +151,7 @@ export default function VerificationPage() {
         {/* Loading State */}
         {loading && (
           <div className="bg-white rounded-3xl p-10 text-center shadow-sm border border-[#EFE5D8] space-y-4">
-            <div className="w-12 h-12 rounded-full border-4 border-[#8C3A21]/20 border-t-[#8C3A21] animate-spin mx-auto" />
+            <div className="w-12 h-12 rounded-full border-4 border-[#7A0221]/20 border-t-[#7A0221] animate-spin mx-auto" />
             <h2 className="font-playfair text-xl text-[#2C1A14]">
               Đang xác thực mã tem định danh...
             </h2>
@@ -189,7 +189,7 @@ export default function VerificationPage() {
             <div className="pt-2 text-center">
               <a
                 href="tel:0979425607"
-                className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-[#8C3A21] hover:bg-[#A95A32] text-white text-sm font-semibold shadow-md transition"
+                className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-[#7A0221] hover:bg-[#9C1A36] text-white text-sm font-semibold shadow-md transition"
               >
                 <Phone size={16} />
                 Gọi Hotline Hỗ Trợ: 0979 425 607
@@ -255,11 +255,11 @@ export default function VerificationPage() {
             <div className="bg-white rounded-3xl p-6 md:p-8 shadow-sm border border-[#EFE5D8] overflow-hidden relative">
               <div className="grid grid-cols-1 md:grid-cols-[1fr_200px] gap-6 items-center">
                 <div className="space-y-3">
-                  <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-[#8C3A21]/10 text-[#8C3A21] border border-[#8C3A21]/20">
+                  <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-[#7A0221]/10 text-[#7A0221] border border-[#7A0221]/20">
                     <Award size={14} />
                     Mắm Cốt Nghệ An Truyền Thống
                   </span>
-                  <h1 className="font-playfair text-3xl md:text-4xl font-bold text-[#8C3A21] tracking-tight leading-tight">
+                  <h1 className="font-playfair text-3xl md:text-4xl font-bold text-[#7A0221] tracking-tight leading-tight">
                     PHONG TRIỀU – {data.batch.productLine.toUpperCase()}
                   </h1>
                   <p className="font-playfair italic text-base md:text-lg text-[#7A6458]">
@@ -294,7 +294,7 @@ export default function VerificationPage() {
             {/* ───────── 1. THÔNG TIN SẢN PHẨM ───────── */}
             <section className="bg-white rounded-3xl p-6 md:p-8 shadow-sm border border-[#EFE5D8] space-y-4">
               <div className="flex items-center gap-2.5 pb-3 border-b border-[#F4ECE1]">
-                <span className="w-7 h-7 rounded-full bg-[#8C3A21] text-white flex items-center justify-center text-xs font-bold">
+                <span className="w-7 h-7 rounded-full bg-[#7A0221] text-white flex items-center justify-center text-xs font-bold">
                   1
                 </span>
                 <h2 className="font-playfair text-xl font-bold text-[#2C1A14]">
@@ -315,7 +315,7 @@ export default function VerificationPage() {
                 </div>
                 <div className="p-3.5 rounded-2xl bg-[#FCF9F2] border border-[#EFE5D8]">
                   <span className="text-xs text-[#7A6458] block mb-0.5">Dòng sản phẩm</span>
-                  <span className="font-semibold text-[#8C3A21]">{data.batch.productLine}</span>
+                  <span className="font-semibold text-[#7A0221]">{data.batch.productLine}</span>
                 </div>
                 <div className="p-3.5 rounded-2xl bg-[#FCF9F2] border border-[#EFE5D8]">
                   <span className="text-xs text-[#7A6458] block mb-0.5">Dung tích</span>
@@ -345,7 +345,7 @@ export default function VerificationPage() {
             {/* ───────── 2. NGUỒN GỐC VÀ QUY TRÌNH SẢN XUẤT ───────── */}
             <section className="bg-white rounded-3xl p-6 md:p-8 shadow-sm border border-[#EFE5D8] space-y-4">
               <div className="flex items-center gap-2.5 pb-3 border-b border-[#F4ECE1]">
-                <span className="w-7 h-7 rounded-full bg-[#8C3A21] text-white flex items-center justify-center text-xs font-bold">
+                <span className="w-7 h-7 rounded-full bg-[#7A0221] text-white flex items-center justify-center text-xs font-bold">
                   2
                 </span>
                 <h2 className="font-playfair text-xl font-bold text-[#2C1A14]">
@@ -355,7 +355,7 @@ export default function VerificationPage() {
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
                 <div className="p-3.5 rounded-2xl bg-[#FCF9F2] border border-[#EFE5D8] flex items-start gap-2.5">
-                  <MapPin size={18} className="text-[#8C3A21] mt-0.5 shrink-0" />
+                  <MapPin size={18} className="text-[#7A0221] mt-0.5 shrink-0" />
                   <div>
                     <span className="text-xs text-[#7A6458] block">Xuất xứ</span>
                     <span className="font-medium text-[#2C1A14]">
@@ -364,7 +364,7 @@ export default function VerificationPage() {
                   </div>
                 </div>
                 <div className="p-3.5 rounded-2xl bg-[#FCF9F2] border border-[#EFE5D8] flex items-start gap-2.5">
-                  <Factory size={18} className="text-[#8C3A21] mt-0.5 shrink-0" />
+                  <Factory size={18} className="text-[#7A0221] mt-0.5 shrink-0" />
                   <div>
                     <span className="text-xs text-[#7A6458] block">Cơ sở sản xuất</span>
                     <span className="font-medium text-[#2C1A14]">
@@ -373,14 +373,14 @@ export default function VerificationPage() {
                   </div>
                 </div>
                 <div className="p-3.5 rounded-2xl bg-[#FCF9F2] border border-[#EFE5D8] flex items-start gap-2.5">
-                  <Package size={18} className="text-[#8C3A21] mt-0.5 shrink-0" />
+                  <Package size={18} className="text-[#7A0221] mt-0.5 shrink-0" />
                   <div>
                     <span className="text-xs text-[#7A6458] block">Nguyên liệu</span>
                     <span className="font-medium text-[#2C1A14]">Cá cơm tươi và muối.</span>
                   </div>
                 </div>
                 <div className="p-3.5 rounded-2xl bg-[#FCF9F2] border border-[#EFE5D8] flex items-start gap-2.5">
-                  <Award size={18} className="text-[#8C3A21] mt-0.5 shrink-0" />
+                  <Award size={18} className="text-[#7A0221] mt-0.5 shrink-0" />
                   <div>
                     <span className="text-xs text-[#7A6458] block">Phương pháp</span>
                     <span className="font-medium text-[#2C1A14]">Ủ chượp truyền thống.</span>
@@ -402,7 +402,7 @@ export default function VerificationPage() {
             {/* ───────── 3. TRUY XUẤT NGUỒN GỐC THEO LÔ ───────── */}
             <section className="bg-white rounded-3xl p-6 md:p-8 shadow-sm border border-[#EFE5D8] space-y-4">
               <div className="flex items-center gap-2.5 pb-3 border-b border-[#F4ECE1]">
-                <span className="w-7 h-7 rounded-full bg-[#8C3A21] text-white flex items-center justify-center text-xs font-bold">
+                <span className="w-7 h-7 rounded-full bg-[#7A0221] text-white flex items-center justify-center text-xs font-bold">
                   3
                 </span>
                 <h2 className="font-playfair text-xl font-bold text-[#2C1A14]">
@@ -416,7 +416,7 @@ export default function VerificationPage() {
                   <span className="text-xs text-amber-900/80 block uppercase tracking-wider font-semibold">
                     Mã mẻ ủ (Mã lô)
                   </span>
-                  <span className="text-lg font-mono font-bold text-[#8C3A21] block mt-0.5">
+                  <span className="text-lg font-mono font-bold text-[#7A0221] block mt-0.5">
                     {data.batch.batchCode}
                   </span>
                 </div>
@@ -456,7 +456,7 @@ export default function VerificationPage() {
             {/* ───────── 4. HƯỚNG DẪN SỬ DỤNG VÀ BẢO QUẢN ───────── */}
             <section className="bg-white rounded-3xl p-6 md:p-8 shadow-sm border border-[#EFE5D8] space-y-4">
               <div className="flex items-center gap-2.5 pb-3 border-b border-[#F4ECE1]">
-                <span className="w-7 h-7 rounded-full bg-[#8C3A21] text-white flex items-center justify-center text-xs font-bold">
+                <span className="w-7 h-7 rounded-full bg-[#7A0221] text-white flex items-center justify-center text-xs font-bold">
                   4
                 </span>
                 <h2 className="font-playfair text-xl font-bold text-[#2C1A14]">
@@ -466,7 +466,7 @@ export default function VerificationPage() {
 
               <div className="space-y-3 text-sm">
                 <div className="p-4 rounded-2xl bg-[#FCF9F2] border border-[#EFE5D8]">
-                  <span className="font-bold text-[#8C3A21] block mb-1">
+                  <span className="font-bold text-[#7A0221] block mb-1">
                     Hướng dẫn sử dụng:
                   </span>
                   <p className="text-[#2C1A14]">
@@ -474,7 +474,7 @@ export default function VerificationPage() {
                   </p>
                 </div>
                 <div className="p-4 rounded-2xl bg-[#FCF9F2] border border-[#EFE5D8]">
-                  <span className="font-bold text-[#8C3A21] block mb-1">
+                  <span className="font-bold text-[#7A0221] block mb-1">
                     Bảo quản:
                   </span>
                   <p className="text-[#2C1A14]">
@@ -485,7 +485,7 @@ export default function VerificationPage() {
             </section>
 
             {/* ───────── 5. KẾT NỐI CÙNG PHONG TRIỀU ───────── */}
-            <section className="bg-gradient-to-br from-[#8C3A21] to-[#682512] rounded-3xl p-6 md:p-8 text-white shadow-xl space-y-5">
+            <section className="bg-gradient-to-br from-[#7A0221] to-[#682512] rounded-3xl p-6 md:p-8 text-white shadow-xl space-y-5">
               <div className="flex items-center gap-2.5">
                 <span className="w-7 h-7 rounded-full bg-white/20 text-white flex items-center justify-center text-xs font-bold">
                   5

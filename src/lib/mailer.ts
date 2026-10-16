@@ -61,7 +61,7 @@ function buildHtml(d: ContactMailData): string {
   return `<!doctype html>
 <html lang="vi"><body style="margin:0;padding:24px;background:#FCF9F2;font-family:Arial,Helvetica,sans-serif;">
   <div style="max-width:560px;margin:0 auto;background:#ffffff;border:1px solid #EADFCF;border-radius:12px;overflow:hidden;">
-    <div style="background:#8C3A21;color:#ffffff;padding:18px 22px;">
+    <div style="background:#7A0221;color:#ffffff;padding:18px 22px;">
       <div style="font-size:12px;letter-spacing:1px;text-transform:uppercase;opacity:.8;">Phong Triều</div>
       <div style="font-size:18px;font-weight:bold;margin-top:4px;">Khách hàng mới liên hệ</div>
     </div>

@@ -91,7 +91,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
   if (isAuthenticated === null || !isAuthenticated) {
     return (
       <div className="min-h-screen bg-[#FCF9F2] flex flex-col items-center justify-center p-4">
-        <div className="w-12 h-12 rounded-full border-4 border-[#8A2E1B]/20 border-t-[#8A2E1B] animate-spin mb-3" />
+        <div className="w-12 h-12 rounded-full border-4 border-[#7A0221]/20 border-t-[#7A0221] animate-spin mb-3" />
         <p className="font-playfair text-lg text-[#2C1A14] font-semibold">
           Kiểm tra quyền truy cập quản trị...
         </p>
@@ -104,7 +104,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
       {/* ───────── MOBILE TOP BAR ───────── */}
       <header className="md:hidden flex items-center justify-between px-4 py-3 bg-[#2C1A14] text-[#FCF9F2] sticky top-0 z-40 shadow-md">
         <div className="flex items-center gap-2.5">
-          <div className="w-8 h-8 rounded-lg bg-[#8A2E1B] flex items-center justify-center text-white font-bold text-sm">
+          <div className="w-8 h-8 rounded-lg bg-[#7A0221] flex items-center justify-center text-white font-bold text-sm">
             PT
           </div>
           <span className="font-playfair font-bold tracking-wide text-white text-base">
@@ -132,7 +132,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
         {/* Brand Logo Header */}
         <div className="p-5 border-b border-white/10 flex items-center justify-between">
           <Link href="/admin" className="flex items-center gap-3 group">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#8A2E1B] to-[#A95A32] flex items-center justify-center shadow-md shadow-black/30 group-hover:scale-105 transition">
+            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#7A0221] to-[#9C1A36] flex items-center justify-center shadow-md shadow-black/30 group-hover:scale-105 transition">
               <ShieldCheck className="text-white" size={22} />
             </div>
             <div>
@@ -169,7 +169,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
                   flex items-center justify-between px-3.5 py-3 rounded-xl text-sm font-medium transition-all group
                   ${
                     active
-                      ? "bg-[#8A2E1B] text-white shadow-md shadow-[#8A2E1B]/30 font-semibold"
+                      ? "bg-[#7A0221] text-white shadow-md shadow-[#7A0221]/30 font-semibold"
                       : "text-[#E8DCD0] hover:text-white hover:bg-white/8"
                   }
                 `}
@@ -203,7 +203,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
           {/* User profile & Logout */}
           <div className="flex items-center justify-between pt-2 px-1">
             <div className="flex items-center gap-2.5">
-              <div className="w-8 h-8 rounded-full bg-[#8A2E1B] flex items-center justify-center text-xs font-bold text-white shadow-xs">
+              <div className="w-8 h-8 rounded-full bg-[#7A0221] flex items-center justify-center text-xs font-bold text-white shadow-xs">
                 AD
               </div>
               <div className="min-w-0">
