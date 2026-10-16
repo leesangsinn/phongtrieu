@@ -1,12 +1,13 @@
 "use client";
 
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useRef } from "react";
 import {
   QrCode,
   FileSpreadsheet,
   PlusCircle,
   RefreshCw,
   Calendar,
+  CalendarDays,
   Layers,
   Sparkles,
   CheckCircle2,
@@ -32,14 +33,47 @@ interface BatchItem {
 const PRODUCT_LINES = ["Di Sản", "Thanh Vị", "Dưỡng Vị"] as const;
 const VOLUMES = ["500ml", "300ml", "100ml"] as const;
 
+/** Ngày hôm nay theo giờ máy (yyyy-mm-dd), không lệch ngày như toISOString() dùng giờ UTC. */
+function todayIso(): string {
+  const d = new Date();
+  const pad = (n: number) => String(n).padStart(2, "0");
+  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+}
+
+/** yyyy-mm-dd → dd/mm/yyyy */
+function isoToVn(iso: string): string {
+  const [y, m, d] = iso.split("-");
+  return y && m && d ? `${d}/${m}/${y}` : "";
+}
+
+/** dd/mm/yyyy → yyyy-mm-dd; trả null nếu không phải ngày có thật (vd 31/02/2026). */
+function vnToIso(text: string): string | null {
+  const match = /^(\d{2})\/(\d{2})\/(\d{4})$/.exec(text);
+  if (!match) return null;
+  const [, dd, mm, yyyy] = match;
+  const date = new Date(Number(yyyy), Number(mm) - 1, Number(dd));
+  const valid =
+    date.getFullYear() === Number(yyyy) && date.getMonth() === Number(mm) - 1 && date.getDate() === Number(dd);
+  return valid && Number(yyyy) >= 2000 ? `${yyyy}-${mm}-${dd}` : null;
+}
+
+/** Chỉ giữ chữ số và tự chèn dấu "/" khi gõ: 16102026 → 16/10/2026. */
+function formatVnDateInput(raw: string): string {
+  const digits = raw.replace(/\D/g, "").slice(0, 8);
+  if (digits.length <= 2) return digits;
+  if (digits.length <= 4) return `${digits.slice(0, 2)}/${digits.slice(2)}`;
+  return `${digits.slice(0, 2)}/${digits.slice(2, 4)}/${digits.slice(4)}`;
+}
+
 export default function AdminQRPage() {
   // Form State
   const [productLine, setProductLine] = useState<string>("Di Sản");
   const [volume, setVolume] = useState<string>("500ml");
   const [batchCode, setBatchCode] = useState<string>("");
-  const [bottlingDate, setBottlingDate] = useState<string>(
-    new Date().toISOString().split("T")[0]
-  );
+  // bottlingDate luôn là yyyy-mm-dd (gửi API); bottlingText là chuỗi dd/mm/yyyy người dùng thấy và gõ
+  const [bottlingDate, setBottlingDate] = useState<string>(todayIso);
+  const [bottlingText, setBottlingText] = useState<string>(() => isoToVn(todayIso()));
+  const datePickerRef = useRef<HTMLInputElement>(null);
   const [quantity, setQuantity] = useState<number>(100);
 
   // UI State
@@ -83,9 +117,9 @@ export default function AdminQRPage() {
       "Dưỡng Vị": "PT-DV",
     };
     const prefix = prefixMap[productLine] || "PT-DS";
-    const dateParts = bottlingDate.split("-");
-    const yy = dateParts[0]?.substring(2) || "26";
-    const mm = dateParts[1] || "10";
+    const dateParts = (bottlingDate || todayIso()).split("-");
+    const yy = dateParts[0].substring(2);
+    const mm = dateParts[1];
     setBatchCode(`${prefix}-${yy}${mm}`);
   };
 
@@ -96,6 +130,11 @@ export default function AdminQRPage() {
 
     if (!batchCode.trim()) {
       setFeedback({ type: "error", message: "Vui lòng nhập Mã mẻ ủ (Mã lô sản xuất)." });
+      return;
+    }
+
+    if (!bottlingDate) {
+      setFeedback({ type: "error", message: "Ngày đóng chai chưa hợp lệ. Vui lòng nhập theo dạng ngày/tháng/năm, ví dụ 16/10/2026." });
       return;
     }
 
@@ -328,14 +367,48 @@ export default function AdminQRPage() {
               >
                 Ngày Đóng Chai <span className="text-[#8A2E1B]">*</span>
               </label>
-              <input
-                type="date"
-                id="bottlingDate"
-                value={bottlingDate}
-                onChange={(e) => setBottlingDate(e.target.value)}
-                className="w-full bg-[#FCF9F2] border border-[#E5D7C7] rounded-xl px-4 py-2.5 text-sm text-[#2C1A14] font-medium focus:outline-none focus:ring-2 focus:ring-[#8A2E1B]/20 focus:border-[#8A2E1B] transition"
-                required
-              />
+              <div className="relative">
+                <input
+                  type="text"
+                  id="bottlingDate"
+                  inputMode="numeric"
+                  placeholder="dd/mm/yyyy"
+                  maxLength={10}
+                  autoComplete="off"
+                  value={bottlingText}
+                  onChange={(e) => {
+                    const text = formatVnDateInput(e.target.value);
+                    setBottlingText(text);
+                    setBottlingDate(vnToIso(text) ?? "");
+                  }}
+                  className="w-full bg-[#FCF9F2] border border-[#E5D7C7] rounded-xl pl-4 pr-11 py-2.5 text-sm text-[#2C1A14] font-medium focus:outline-none focus:ring-2 focus:ring-[#8A2E1B]/20 focus:border-[#8A2E1B] transition"
+                  required
+                />
+                <button
+                  type="button"
+                  aria-label="Chọn ngày từ lịch"
+                  onClick={() => datePickerRef.current?.showPicker?.()}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-[#7A6458] hover:text-[#8A2E1B]"
+                >
+                  <CalendarDays size={18} />
+                </button>
+                {/* Lịch của trình duyệt, chỉ dùng để chọn nhanh; giá trị hiển thị vẫn là dd/mm/yyyy */}
+                <input
+                  ref={datePickerRef}
+                  type="date"
+                  tabIndex={-1}
+                  aria-hidden="true"
+                  value={bottlingDate}
+                  onChange={(e) => {
+                    setBottlingDate(e.target.value);
+                    setBottlingText(isoToVn(e.target.value));
+                  }}
+                  className="absolute right-3 bottom-0 w-0 h-0 opacity-0 pointer-events-none"
+                />
+              </div>
+              {bottlingText.length === 10 && !bottlingDate && (
+                <p className="text-xs text-red-600 mt-1.5">Ngày không hợp lệ.</p>
+              )}
             </div>
 
             {/* Mã mẻ ủ (batchCode) */}
