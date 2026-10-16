@@ -22,13 +22,16 @@ const SLIDES: Slide[] = [
   { src: "/cauchuyen4.jpg", alt: "Người thợ khuấy chượp giữa hàng chum sành", caption: "Ủ chượp bền bỉ theo thời gian" },
 ];
 
-const AUTOPLAY_MS = 5500;
+const AUTOPLAY_MS = 4500;
 const SWIPE_THRESHOLD = 40;
 
-/** Khung ảnh in cổ điển, trượt ngang, có nút điều hướng, chấm chỉ báo, vuốt trên điện thoại và tự chạy. */
+/**
+ * Carousel ảnh không khung: ảnh chuyển mờ dần, tự chạy liên tục.
+ * Chỉ tạm dừng khi rê chuột vào; mũi tên chỉ hiện khi rê chuột (luôn hiện trên thiết bị cảm ứng).
+ */
 export default function StoryCarousel() {
   const [index, setIndex] = useState(0);
-  const [paused, setPaused] = useState(false);
+  const [hovered, setHovered] = useState(false);
   const [reducedMotion, setReducedMotion] = useState(false);
   const touchStartX = useRef<number | null>(null);
   const total = SLIDES.length;
@@ -44,12 +47,12 @@ export default function StoryCarousel() {
     return () => media.removeEventListener("change", onChange);
   }, []);
 
-  // Tự chuyển ảnh; dừng khi rê chuột/focus vào khung hoặc khi người dùng giảm chuyển động
+  // Tự chuyển ảnh. Đặt lại bộ đếm mỗi khi đổi ảnh (kể cả khi người dùng bấm) để ảnh nào cũng được xem đủ lâu.
   useEffect(() => {
-    if (paused || reducedMotion) return;
-    const timer = window.setInterval(next, AUTOPLAY_MS);
-    return () => window.clearInterval(timer);
-  }, [paused, reducedMotion, next, index]);
+    if (hovered || reducedMotion) return;
+    const timer = window.setTimeout(next, AUTOPLAY_MS);
+    return () => window.clearTimeout(timer);
+  }, [hovered, reducedMotion, next, index]);
 
   const onTouchEnd = (clientX: number) => {
     if (touchStartX.current === null) return;
@@ -60,76 +63,63 @@ export default function StoryCarousel() {
     else prev();
   };
 
+  // Trên máy có chuột: ẩn mũi tên cho đến khi rê vào. Trên cảm ứng: luôn hiện (nhưng mờ).
   const navButton =
-    "absolute top-1/2 z-10 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-white/80 text-foreground shadow-md backdrop-blur-sm transition-colors hover:bg-primary hover:text-white focus-visible:bg-primary focus-visible:text-white focus-visible:outline-none";
+    "absolute top-1/2 z-10 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-white/80 text-foreground shadow-md backdrop-blur-sm transition-all duration-300 hover:bg-primary hover:text-white focus-visible:bg-primary focus-visible:text-white focus-visible:outline-none [@media(hover:hover)]:opacity-0 [@media(hover:hover)]:group-hover:opacity-100 [@media(hover:hover)]:focus-visible:opacity-100";
 
   return (
     <div
       role="region"
       aria-roledescription="carousel"
       aria-label="Hình ảnh nghề làm nước mắm vùng biển"
-      className="mx-auto w-full max-w-md rotate-[-1.5deg] transition-transform duration-500 hover:rotate-0 lg:max-w-none"
-      onMouseEnter={() => setPaused(true)}
-      onMouseLeave={() => setPaused(false)}
-      onFocusCapture={() => setPaused(true)}
-      onBlurCapture={() => setPaused(false)}
+      className="group mx-auto w-full max-w-md lg:max-w-none"
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
       onKeyDown={(e) => {
         if (e.key === "ArrowLeft") prev();
         if (e.key === "ArrowRight") next();
       }}
     >
-      <div className="rounded-sm bg-white p-3 pb-4 shadow-xl">
-        <div
-          className="relative aspect-[4/5] w-full touch-pan-y overflow-hidden rounded-sm bg-surface"
-          onTouchStart={(e) => (touchStartX.current = e.touches[0].clientX)}
-          onTouchEnd={(e) => onTouchEnd(e.changedTouches[0].clientX)}
-        >
-          {/* Dải ảnh trượt ngang */}
-          <div
-            className="flex h-full transition-transform duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none"
-            style={{ transform: `translateX(-${index * 100}%)` }}
-          >
-            {SLIDES.map((slide, i) => (
-              <div
-                key={slide.src}
-                role="group"
-                aria-roledescription="slide"
-                aria-label={`${i + 1} / ${total}`}
-                aria-hidden={i !== index}
-                className="relative h-full w-full shrink-0"
-              >
-                <Image
-                  src={slide.src}
-                  alt={slide.alt}
-                  fill
-                  sizes="(max-width: 1024px) 90vw, 34vw"
-                  className="object-cover"
-                  priority={i === 0}
-                />
-              </div>
-            ))}
-          </div>
+      <div
+        className="relative aspect-[4/5] w-full touch-pan-y overflow-hidden rounded-[1.75rem] bg-surface shadow-[0_24px_60px_-20px_rgba(61,40,23,0.35)]"
+        onTouchStart={(e) => (touchStartX.current = e.touches[0].clientX)}
+        onTouchEnd={(e) => onTouchEnd(e.changedTouches[0].clientX)}
+      >
+        {/* Các ảnh xếp chồng, ảnh hiện tại mờ dần lên và zoom chậm */}
+        {SLIDES.map((slide, i) => {
+          const active = i === index;
+          return (
+            <div
+              key={slide.src}
+              role="group"
+              aria-roledescription="slide"
+              aria-label={`${i + 1} / ${total}`}
+              aria-hidden={!active}
+              className={`absolute inset-0 transition-opacity duration-[1400ms] ease-in-out motion-reduce:transition-none ${
+                active ? "z-[1] opacity-100" : "opacity-0"
+              }`}
+            >
+              <Image
+                src={slide.src}
+                alt={slide.alt}
+                fill
+                sizes="(max-width: 1024px) 90vw, 34vw"
+                className={`object-cover transition-transform ease-out motion-reduce:transition-none ${
+                  active ? "scale-100 duration-[6000ms]" : "scale-[1.08] duration-0"
+                }`}
+                priority={i === 0}
+              />
+            </div>
+          );
+        })}
 
-          {/* Lớp tối nhẹ ở đáy để số thứ tự luôn đọc được trên ảnh sáng */}
-          <div className="pointer-events-none absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-black/35 to-transparent" />
-          <span className="pointer-events-none absolute bottom-3 right-4 font-playfair text-sm tracking-widest text-white/90">
-            {String(index + 1).padStart(2, "0")} / {String(total).padStart(2, "0")}
-          </span>
-
-          <button type="button" onClick={prev} aria-label="Ảnh trước" className={`${navButton} left-2`}>
-            <ChevronLeft size={20} />
-          </button>
-          <button type="button" onClick={next} aria-label="Ảnh kế tiếp" className={`${navButton} right-2`}>
-            <ChevronRight size={20} />
-          </button>
-        </div>
-
-        {/* Chú thích kiểu ảnh in + chấm chỉ báo */}
-        <div className="mt-3 flex items-center justify-between gap-4 px-1">
-          <p key={index} aria-live="polite" className="font-playfair text-[15px] italic text-primary animate-fade-up">
+        {/* Lớp chuyển màu mờ dần ở đáy ảnh chứa chú thích và chấm chỉ báo */}
+        <div className="pointer-events-none absolute inset-x-0 bottom-0 z-[2] h-32 bg-gradient-to-t from-[#2C1A14]/70 via-[#2C1A14]/25 to-transparent" />
+        <div className="absolute inset-x-0 bottom-0 z-[3] flex items-end justify-between gap-4 px-5 pb-4">
+          <p key={index} aria-live="polite" className="animate-fade-up font-playfair text-base italic text-white drop-shadow">
             {SLIDES[index].caption}
           </p>
-          <div className="flex shrink-0 items-center gap-1.5">
+          <div className="flex shrink-0 items-center gap-1.5 pb-1.5">
             {SLIDES.map((slide, i) => (
               <button
                 key={slide.src}
@@ -137,13 +127,20 @@ export default function StoryCarousel() {
                 onClick={() => setIndex(i)}
                 aria-label={`Xem ảnh ${i + 1}`}
                 aria-current={i === index}
-                className={`h-2 rounded-full transition-all duration-300 ${
-                  i === index ? "w-5 bg-primary" : "w-2 bg-primary/25 hover:bg-primary/50"
+                className={`h-1.5 rounded-full transition-all duration-500 ${
+                  i === index ? "w-5 bg-white" : "w-1.5 bg-white/45 hover:bg-white/80"
                 }`}
               />
             ))}
           </div>
         </div>
+
+        <button type="button" onClick={prev} aria-label="Ảnh trước" className={`${navButton} left-3`}>
+          <ChevronLeft size={20} />
+        </button>
+        <button type="button" onClick={next} aria-label="Ảnh kế tiếp" className={`${navButton} right-3`}>
+          <ChevronRight size={20} />
+        </button>
       </div>
     </div>
   );
