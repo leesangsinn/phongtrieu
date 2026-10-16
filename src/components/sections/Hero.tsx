@@ -2,7 +2,6 @@
 
 import { useEffect, useRef } from "react";
 import Link from "next/link";
-import Image from "next/image";
 
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -30,21 +29,6 @@ export default function Hero() {
         ".hero-text-element",
         { y: 50, opacity: 0 },
         { y: 0, opacity: 1, duration: 1, stagger: 0.2 }
-      );
-
-      // Linh vật xuất hiện từ phải sang, sau đó lơ lửng nhẹ (CSS animate-float)
-      tl.fromTo(
-        ".hero-mascot",
-        { x: 80, opacity: 0 },
-        { x: 0, opacity: 1, duration: 1.2 },
-        0.4
-      );
-
-      // Hiệu ứng lơ lửng vô hạn cho linh vật
-      gsap.fromTo(
-        ".hero-mascot-float",
-        { y: -15 },
-        { y: 15, duration: 2, ease: "sine.inOut", repeat: -1, yoyo: true }
       );
 
 
@@ -176,19 +160,6 @@ export default function Hero() {
             </div>
           </div>
         </div>
-      </div>
-
-      {/* ─── LINH VẬT ──────────────────────────────────────────────── */}
-      <div className="hero-mascot opacity-0 hidden lg:block absolute right-[6%] bottom-[14%] z-10 w-[min(20vw,300px)] pointer-events-none">
-        <Image
-          src="/linh-vat-cutout.png"
-          alt="Linh vật cá Phong Triều cầm chai nước mắm"
-          width={776}
-          height={898}
-          priority
-          sizes="(max-width: 1500px) 20vw, 300px"
-          className="hero-mascot-float drop-shadow-[0_20px_30px_rgba(0,0,0,0.35)]"
-        />
       </div>
 
       {/* ─── SCROLL DOWN CTA ───────────────────────────────────────── */}
