@@ -13,6 +13,7 @@ import {
   Waves,
 } from "lucide-react";
 import ScrollReveal from "@/components/story/ScrollReveal";
+import StoryCarousel from "@/components/story/StoryCarousel";
 
 export const metadata: Metadata = {
   title: "Câu chuyện thương hiệu",
@@ -23,8 +24,6 @@ export const metadata: Metadata = {
 // Ảnh dùng trong trang (đều nằm trong /public)
 const IMG = {
   sunset: "/thuyen-cauchuyen.jpg",
-  fish: "/ca-com-tuoi-5.jpg",
-  jars: "/chum-mam.jpg",
   stirring: "/1790930439418_5418089955404882545_g7806269425997013012_bbfcaca38aef6dda8de5faea44647bb4.jpg",
   bowl: "/doi-moi-co-chon-loc.jpg",
   village: "/di-san-nghe-mam.jpg",
@@ -33,7 +32,6 @@ const IMG = {
 
 const eyebrow = "section-label !text-sm !mb-5";
 const h2 = "font-playfair text-3xl md:text-4xl lg:text-[2.6rem] leading-tight text-foreground";
-const polaroid = "absolute bg-white p-1.5 pb-5 rounded-md shadow-lg border-4 border-white";
 
 const meanings = [
   {
@@ -166,23 +164,9 @@ export default function StoryPage() {
             </div>
           </div>
 
-          {/* Collage 3 ảnh */}
-          <div data-reveal="0.15" className="relative mx-auto h-[420px] w-full max-w-md lg:col-span-4 lg:max-w-none">
-            <div className={`${polaroid} left-0 top-0 z-10 w-[88%] -rotate-2`}>
-              <div className="relative aspect-[16/10] overflow-hidden rounded-sm">
-                <Image src={IMG.sunset} alt="Thuyền câu lúc hoàng hôn trên biển" fill sizes="(max-width: 1024px) 80vw, 30vw" className="object-cover" />
-              </div>
-            </div>
-            <div className={`${polaroid} bottom-0 left-[2%] z-20 w-[48%] rotate-3`}>
-              <div className="relative aspect-square overflow-hidden rounded-sm">
-                <Image src={IMG.fish} alt="Rổ cá cơm tươi" fill sizes="20vw" className="object-cover" />
-              </div>
-            </div>
-            <div className={`${polaroid} bottom-4 right-0 z-30 w-[48%] -rotate-2`}>
-              <div className="relative aspect-square overflow-hidden rounded-sm">
-                <Image src={IMG.jars} alt="Chum sành ủ nước mắm" fill sizes="20vw" className="object-cover" />
-              </div>
-            </div>
+          {/* Carousel ảnh nghề biển */}
+          <div data-reveal="0.15" className="lg:col-span-4">
+            <StoryCarousel />
           </div>
 
           {/* Ý nghĩa tên gọi */}
