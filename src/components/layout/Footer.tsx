@@ -1,12 +1,29 @@
 import Link from "next/link";
 import Image from "next/image";
-import { Mail, Phone, Share2, PlayCircle, Camera } from "lucide-react";
+import { Mail, Phone } from "lucide-react";
 import { navLinks } from "@/lib/nav";
 
+type IconProps = { size?: number };
+
+function FacebookIcon({ size = 18 }: IconProps) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor" aria-hidden>
+      <path d="M13.5 22v-8.2h2.8l.5-3.3h-3.3V8.4c0-.9.4-1.7 1.8-1.7h1.6V3.8c-.3 0-1.3-.2-2.5-.2-2.6 0-4.3 1.6-4.3 4.4v2.5H7.2v3.3H10V22h3.5Z" />
+    </svg>
+  );
+}
+
+function TikTokIcon({ size = 18 }: IconProps) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor" aria-hidden>
+      <path d="M16.6 2h-3.2v12.4a2.8 2.8 0 1 1-2.8-2.8c.3 0 .6 0 .8.1V8.4a6 6 0 1 0 5.2 5.9V8.6a7.3 7.3 0 0 0 4.2 1.3V6.7a4.2 4.2 0 0 1-4.2-4.7Z" />
+    </svg>
+  );
+}
+
 const socials = [
-  { icon: Share2, label: "Facebook", href: "#" },
-  { icon: Camera, label: "Instagram", href: "#" },
-  { icon: PlayCircle, label: "YouTube", href: "#" },
+  { icon: FacebookIcon, label: "Facebook", href: "https://www.facebook.com/mamdisanphongtrieu" },
+  { icon: TikTokIcon, label: "TikTok", href: "https://www.tiktok.com/@nuocmemdongtrieu" },
 ];
 
 export default function Footer() {
@@ -75,14 +92,16 @@ export default function Footer() {
             <h4 className="font-playfair font-semibold text-background mb-4">Theo dõi chúng tôi</h4>
             <div className="flex items-center gap-3">
               {socials.map(({ icon: Icon, label, href }) => (
-                <Link
+                <a
                   key={label}
                   href={href}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   aria-label={label}
                   className="w-10 h-10 rounded-full bg-background/10 hover:bg-background hover:text-earth-dark flex items-center justify-center transition-colors"
                 >
                   <Icon size={18} />
-                </Link>
+                </a>
               ))}
             </div>
           </div>
