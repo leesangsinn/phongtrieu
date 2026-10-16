@@ -36,7 +36,7 @@ export default function NewsPage() {
             </span>
             <h1
               data-reveal="0.1"
-              className="font-playfair text-4xl leading-[1.15] text-foreground md:text-5xl lg:text-6xl"
+              className="font-playfair text-4xl italic leading-[1.15] text-primary md:text-5xl lg:text-6xl"
             >
               Những câu chuyện nhỏ về vị mắm lớn.
             </h1>

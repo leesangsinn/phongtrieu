@@ -88,7 +88,7 @@ export default function StoryPage() {
             </span>
             <h1
               data-reveal="0.1"
-              className="font-playfair text-4xl leading-[1.15] text-foreground md:text-5xl lg:text-6xl"
+              className="font-playfair text-4xl italic leading-[1.15] text-primary md:text-5xl lg:text-6xl"
             >
               Từ nhịp gió và con nước, lưu giữ vị quê nhà.
             </h1>
